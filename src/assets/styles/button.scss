@@ -1,0 +1,29 @@
+.btn-primary {
+  &:after {
+    content: '';
+    position: absolute;
+    height: 200%;
+    width: 2rem;
+    left: -2rem;
+    background: linear-gradient(
+      to bottom,
+      rgba(229, 172, 142, 0),
+      rgba(255, 255, 255, 0.8) 50%,
+      rgba(229, 172, 142, 0)
+    );
+    filter: blur(0.75rem);
+    transform: rotateZ(30deg) translateX(-50%);
+    transition: left 0.3s ease-in-out, transform 0.3s ease-in-out;
+  }
+
+  &:hover {
+    &::after {
+      left: calc(100% + 2rem);
+      transform: rotateZ(30deg) translateX(50%);
+    }
+  }
+
+  &:active {
+    opacity: 0.9;
+  }
+}
