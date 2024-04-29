@@ -1,3 +1,4 @@
+import { FontAttributes } from '@/libs/types/customize'
 import { KonvaNodeEvents } from 'react-konva'
 
 export type KonvaNodeAttributes = {
@@ -10,6 +11,8 @@ export type KonvaNodeAttributes = {
   draggable?: boolean
   align?: 'left' | 'center' | 'right'
   fontStyle?: 'normal' | 'italic' | 'bold' | 'italic bold'
+  fontFamily?: string
+  fontAttrs?: FontAttributes
   textDecoration?: '' | 'underline' | 'line-through'
   'data-item-type'?: string
 } & Record<string, any>

@@ -6,6 +6,7 @@ import Editor from './editor'
 import Header from './header'
 import Sidebar from './sidebar'
 import { KonvaProvider, useKonva } from '@/components/pages/customize/hooks/context'
+import { fonts } from '@/libs/constants/customize'
 
 const initialItems: KonvaNodeData[] = [
   {
@@ -13,11 +14,14 @@ const initialItems: KonvaNodeData[] = [
     attrs: {
       id: 'QxiYE-HAI311pw98Nqtx9',
       text: 'Text Shadow!',
-      fontFamily: 'Calibri',
+      fontFamily: fonts[0].name,
+      fontAttrs: fonts[0].fonts[0],
       fontSize: 95,
-      x: 0,
-      y: 0,
+      x: 300,
+      y: 500,
+      fill: '#da1414',
       align: 'center',
+      fontStyle: 'italic bold',
     },
     className: 'Text',
   },

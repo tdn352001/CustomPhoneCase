@@ -1,12 +1,12 @@
 import { useKonvaContext } from '@/components/pages/customize/hooks/use-konva-context'
 import { Button } from '@/components/ui/button'
 import SvgIcon from '@/components/ui/svg-icon'
-import { useAppSelector } from '@/hooks/redux'
+import { useAppDispatch, useAppSelector } from '@/hooks/redux'
 import { cn } from '@/libs/utils/tw-merge'
 import { ChevronDown, Minus, Plus } from 'lucide-react'
 import React, { ChangeEvent, HTMLAttributes, FocusEvent, useRef, useCallback, useEffect } from 'react'
 import Konva from 'konva'
-import { customizeSelector } from '@/store/slices/customize'
+import { ControlBars, CustomizeTab, customizeActions, customizeSelector } from '@/store/slices/customize'
 import { Separator } from '@/components/ui/separator'
 import { Toggle } from '@/components/ui/toggle'
 
@@ -24,14 +24,29 @@ const TextStyle = () => {
   const { getSelectedItems, updateItem } = useKonvaContext()
   const selectedItems = getSelectedItems()
   const textNode = selectedItems[0] as Konva.Text
+  const activeTab = useAppSelector(customizeSelector.activeTab)
 
-  // const interactionNode = useAppSelector(customizeSelector.interactionNode)!
-  const interactionNodeIds = useAppSelector(customizeSelector.interactionNodeIds)!
+  const interactionNode = useAppSelector(customizeSelector.interactionNode)!
+  // const interactionNodeIds = useAppSelector(customizeSelector.interactionNodeIds)!
 
   const inputRef = useRef<HTMLInputElement>(null)
   const spanRef = useRef<HTMLSpanElement>(null)
 
   const textSize = textNode.fontSize()
+  const isSelectingFont = activeTab === CustomizeTab.FontFamily
+  const isSelectingColor = activeTab === CustomizeTab.FontColors
+
+  const fontStyle = textNode.fontStyle()
+  const isBold = fontStyle.includes('bold')
+  const isItalic = fontStyle.includes('italic')
+  const isUnderline = textNode.textDecoration() === 'underline'
+
+  const align = textNode.align()
+  const isAlignLeft = align === 'left'
+  const isAlignRight = align === 'right'
+  const isAlignCenter = align === 'center'
+
+  const dispatch = useAppDispatch()
 
   const forceUpdate = () => setForceUpdate((prev) => prev + 1)
 
@@ -75,6 +90,10 @@ const TextStyle = () => {
     updateInputWidth()
   }
 
+  const handleChangeAlign = (active: boolean, align: string) => {
+    updateItem(textNode.id(), { align: active ? align : '' } as any)
+  }
+
   useEffect(() => {
     if (inputRef.current) {
       inputRef.current.value = textNode.fontSize().toString()
@@ -85,7 +104,16 @@ const TextStyle = () => {
   return (
     <div className="w-full flex items-center justify-end gap-5">
       <Group>
-        <button className="h-10 px-3 flex items-center gap-2 border rounded-lg transition-colors hover:bg-grey/40 active:bg-grey/20">
+        <button
+          className={cn(
+            'h-10 px-3 flex items-center gap-2 border rounded-lg transition-colors hover:bg-grey/40 active:bg-grey/20',
+            isSelectingFont && 'bg-grey/40'
+          )}
+          disabled={isSelectingFont}
+          onClick={() => {
+            dispatch(customizeActions.setActiveTab(CustomizeTab.FontFamily))
+          }}
+        >
           <span>{textNode.fontFamily()}</span>
           <ChevronDown className="size-5 text-disabled" />
         </button>
@@ -98,11 +126,11 @@ const TextStyle = () => {
             disabled={textSize <= MIN_FONT_SIZE}
             onClick={handleDecreaseFontSize}
           >
-            <Minus />
+            <Minus size={20} />
           </Button>
           <input
             ref={inputRef}
-            className="w-6 min-w-6 text-xl focus:outline-none text-center"
+            className="w-6 min-w-6 text-lg focus:outline-none text-center translate-y-px"
             pattern={REGEXP_ONLY_DIGITS}
             maxLength={4}
             defaultValue={textSize}
@@ -116,34 +144,94 @@ const TextStyle = () => {
             disabled={textSize >= MAX_FONT_SIZE}
             onClick={handleIncreaseFontSize}
           >
-            <Plus />
+            <Plus size={20} />
           </Button>
         </div>
       </Group>
       <Separator className="h-5" orientation="vertical" />
       <Group>
-        <Toggle>
+        <Toggle
+          pressed={isSelectingColor}
+          onPressedChange={(pressed) => {
+            if (pressed) {
+              dispatch(customizeActions.setActiveTab(CustomizeTab.FontColors))
+            }
+          }}
+        >
           <SvgIcon color={textNode.fill()} icon="TextColor" className="size-6" />
         </Toggle>
-        <Toggle>
+        <Toggle
+          pressed={isBold}
+          onPressedChange={(isBold) => {
+            const fontStyle = textNode.fontStyle()
+            let styles = fontStyle.split(' ')
+            if (isBold) {
+              styles.push('bold')
+            } else {
+              styles = styles.filter((item) => item !== 'bold')
+            }
+            const newFontStyle = styles.join(' ')
+
+            updateItem(textNode.attrs.id, { fontStyle: newFontStyle } as any)
+          }}
+        >
           <SvgIcon icon="TextBolder" className="size-6" />
         </Toggle>
-        <Toggle>
+        <Toggle
+          pressed={isItalic}
+          onPressedChange={(isItalic) => {
+            const fontStyle = textNode.fontStyle()
+            let styles = fontStyle.split(' ')
+            if (isItalic) {
+              styles.push('italic')
+            } else {
+              styles = styles.filter((item) => item !== 'italic')
+            }
+            const newFontStyle = styles.join(' ')
+
+            updateItem(textNode.attrs.id, { fontStyle: newFontStyle } as any)
+          }}
+        >
           <SvgIcon icon="TextItalic" className="size-6" />
         </Toggle>
-        <Toggle>
+        <Toggle
+          pressed={isUnderline}
+          onPressedChange={(isUnderline) => {
+            let textDecoration = ''
+            if (isUnderline) {
+              textDecoration = 'underline'
+            }
+
+            updateItem(textNode.attrs.id, { textDecoration } as any)
+          }}
+        >
           <SvgIcon icon="TextUnderline" className="size-6" />
         </Toggle>
       </Group>
       <Separator className="h-5" orientation="vertical" />
       <Group>
-        <Toggle>
+        <Toggle
+          pressed={isAlignLeft}
+          onPressedChange={(active) => {
+            handleChangeAlign(active, 'left')
+          }}
+        >
           <SvgIcon icon="AlignLeft" className="size-6" />
         </Toggle>
-        <Toggle>
+        <Toggle
+          pressed={isAlignCenter}
+          onPressedChange={(active) => {
+            handleChangeAlign(active, 'center')
+          }}
+        >
           <SvgIcon icon="AlignCenter" className="size-6" />
         </Toggle>
-        <Toggle>
+        <Toggle
+          pressed={isAlignRight}
+          onPressedChange={(active) => {
+            handleChangeAlign(active, 'right')
+          }}
+        >
           <SvgIcon icon="AlignRight" className="size-6" />
         </Toggle>
       </Group>

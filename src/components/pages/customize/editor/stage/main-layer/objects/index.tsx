@@ -65,7 +65,7 @@ const KonvaObjects = () => {
     const itemAttrs = item.attrs || {}
     const objectProps: KonvaNodeProps = {
       id: item.id,
-      attrs: itemAttrs,
+      attrs: {},
       draggable: true,
       onDragEnd: handleDragEnd,
       onTouchEnd: handleDragEnd,
@@ -73,13 +73,6 @@ const KonvaObjects = () => {
       onTap: handleSelectItem,
       onTransform: handleTransform,
       onTransformEnd: handleTransformEnd,
-      // isSelected: () => {
-      //   const selectedItems = getSelectedItems();
-      //   if (!selectedItems || !item.attrs.id) {
-      //     return false;
-      //   }
-      //   return selectedItems.some((selectedItem) => selectedItem.attrs.id === item.attrs.id);
-      // },
       ...itemAttrs,
     }
     switch (item.className) {

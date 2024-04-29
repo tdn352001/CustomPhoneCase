@@ -38,6 +38,7 @@ import TextUnderline from './text-underline.svg'
 import AlignLeft from './align-left.svg'
 import AlignCenter from './align-center.svg'
 import AlignRight from './align-right.svg'
+import CirlcePlus from './plus-circle.svg'
 
 export const SVGIcons = {
   LogoFull,
@@ -80,6 +81,7 @@ export const SVGIcons = {
   AlignLeft,
   AlignCenter,
   AlignRight,
+  CirlcePlus,
 } as const
 
 export type SVGIcon = keyof typeof SVGIcons

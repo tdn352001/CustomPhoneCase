@@ -1,6 +1,6 @@
 import Konva from 'konva'
 import { KonvaEventObject } from 'konva/lib/Node'
-import React, { RefObject, useRef } from 'react'
+import React, { RefObject, useEffect, useRef } from 'react'
 import { Text } from 'react-konva'
 import { KonvaNodeProps } from '@/libs/types'
 import { isMetaKey } from '@/libs/utils/konva/is-meta-key'
@@ -13,8 +13,10 @@ type KonvaTextProps = KonvaNodeProps & {
  * Override onClick and onTap event receive from parent
  */
 const KonvaText = (props: KonvaTextProps) => {
-  const { onClick, transformerRef, updateItem, ...attrs } = props
+  const { onClick, transformerRef, updateItem, ...rest } = props
+
   const textRef = useRef<Konva.Text>(null)
+  console.log('text render')
 
   const timeoutRef = useRef<number>()
 
@@ -39,7 +41,7 @@ const KonvaText = (props: KonvaTextProps) => {
     }
   }
 
-  return <Text ref={textRef} {...attrs} onClick={handleTextClick} onTap={handleTextClick} />
+  return <Text ref={textRef} {...rest} onClick={handleTextClick} onTap={handleTextClick} />
 }
 
 export default KonvaText

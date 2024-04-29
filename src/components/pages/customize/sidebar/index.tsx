@@ -1,18 +1,20 @@
 'use client'
 
-import React, { ChangeEvent, Suspense, useRef } from 'react'
+import { SVGIcon } from '@/assets/svgs'
+import { useKonvaContext } from '@/components/pages/customize/hooks/use-konva-context'
+import FontFamilies from '@/components/pages/customize/sidebar/font-families'
 import SvgIcon from '@/components/ui/svg-icon'
+import { useUploadFileMutation } from '@/hooks/queries/assets'
+import { useAppDispatch, useAppSelector } from '@/hooks/redux'
+import { getServerFile } from '@/libs/utils/get-server-file'
 import { cn } from '@/libs/utils/tw-merge'
 import { CustomizeTab, customizeActions, customizeSelector } from '@/store/slices/customize'
-import { getServerFile } from '@/libs/utils/get-server-file'
-import { useAppDispatch, useAppSelector } from '@/hooks/redux'
-import { useUploadFileMutation } from '@/hooks/queries/assets'
-import { useKonvaContext } from '@/components/pages/customize/hooks/use-konva-context'
-import TemplatesTab from './templates'
+import { ChangeEvent, Suspense, useRef } from 'react'
+import FontColors from './font-colors'
 import LayersTab from './layers'
-import TextTab from './text'
 import StickersTab, { StickerTabSkeleton } from './stickers'
-import { SVGIcon } from '@/assets/svgs'
+import TemplatesTab from './templates'
+import TextTab from './text'
 
 const tabs: { name: CustomizeTab; icon: SVGIcon }[] = [
   {
@@ -44,18 +46,22 @@ const Sidebar = () => {
 
   const tabContent = (function getTabContent() {
     switch (activeTab) {
-      case 'Templates':
+      case CustomizeTab.Templates:
         return <TemplatesTab />
-      case 'Layers':
+      case CustomizeTab.Layers:
         return <LayersTab />
-      case 'Text':
+      case CustomizeTab.Text:
         return <TextTab />
-      case 'Stickers':
+      case CustomizeTab.Stickers:
         return (
           <Suspense fallback={<StickerTabSkeleton />}>
             <StickersTab />
           </Suspense>
         )
+      case CustomizeTab.FontFamily:
+        return <FontFamilies />
+      case CustomizeTab.FontColors:
+        return <FontColors />
     }
   })()
 

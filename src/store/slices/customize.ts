@@ -16,7 +16,8 @@ export enum CustomizeTab {
   Stickers = 'Stickers',
   Images = 'Images',
   Upload = 'Upload',
-  FontFamily = 'FontFamily',
+  FontFamily = 'Font Family',
+  FontColors = 'Font Color',
 }
 
 export type KonvaNodeData = {

@@ -24,6 +24,7 @@ const Stage = ({ containerWidth, containerHeight }: StageProps) => {
   useEffect(() => {
     ;(window as any).stage = stageRef.current
   }, [])
+
   return (
     <div
       className="absolute top-1/2 left-1/2"

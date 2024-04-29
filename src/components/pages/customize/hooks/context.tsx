@@ -1,17 +1,16 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { KonvaEventObject, Node } from 'konva/lib/Node'
-import Konva from 'konva'
-import React, { createContext, ReactNode, useEffect, useRef } from 'react'
-import lodash from 'lodash'
 import { getWorkspacePosition } from '@/components/pages/customize/hooks/use-workspace-position'
 import { useAppDispatch } from '@/hooks/redux'
 import { KonvaSelectionBoxName } from '@/libs/constants/konva'
-import { StickerItem, KonvaNodeAttributes } from '@/libs/types'
-import { ControlBars, KonvaNodeData, customizeActions } from '@/store/slices/customize'
+import { FontAttributes, KonvaNodeAttributes, StickerItem, TypeFace } from '@/libs/types'
 import { isKonvaStage, isKonvaText, isKonvaTransformer } from '@/libs/utils/konva/get-node-type'
 import { isMetaKey } from '@/libs/utils/konva/is-meta-key'
-import ControlBar from '@/components/pages/customize/controll-bar'
 import store from '@/store'
+import { ControlBars, CustomizeTab, KonvaNodeData, customizeActions } from '@/store/slices/customize'
+import Konva from 'konva'
+import { KonvaEventObject, Node } from 'konva/lib/Node'
+import lodash from 'lodash'
+import React, { ReactNode, createContext, useEffect, useRef } from 'react'
 
 type StageData = {
   stageRef: React.RefObject<Konva.Stage>
@@ -29,6 +28,9 @@ type StageData = {
   getSelectedItems: () => Node[]
   selectItems: (item: Node | Node[]) => void
   handleSelectItem: (e: KonvaEventObject<Event>) => void
+  isFontLoaded: (name: string, attrs?: FontAttributes) => boolean
+  loadFont: (name: string, attrs: FontAttributes) => Promise<void>
+  loadTypeface: (typeface: TypeFace) => void
 }
 
 type UseKonvaOptions = {
@@ -51,6 +53,9 @@ const fallbackStageData: StageData = {
   getSelectedItems: () => [],
   selectItems: () => {},
   handleSelectItem: () => {},
+  isFontLoaded: () => false,
+  loadFont: async () => {},
+  loadTypeface: () => {},
 }
 
 export const KonvaContext = createContext<StageData>(fallbackStageData)
@@ -70,6 +75,7 @@ export const useKonva = (options: UseKonvaOptions = {}): StageData => {
   const transformerRef = useRef<Konva.Transformer>(null)
   const selectionBoxRef = useRef<Konva.Rect>(null)
   const textAreaRef = useRef<HTMLTextAreaElement>(null)
+  const loadedFonts = useRef<Record<string, FontAttributes[]>>({})
 
   const dispatch = useAppDispatch()
 
@@ -154,7 +160,7 @@ export const useKonva = (options: UseKonvaOptions = {}): StageData => {
         y: y + height / 2 - defaultSize / 2,
         text: content ?? 'Text',
         fontSize: fontSize ?? 30,
-        fill: 'black',
+        fill: '#000000',
       },
     })
   }
@@ -195,9 +201,12 @@ export const useKonva = (options: UseKonvaOptions = {}): StageData => {
     if (itemsLength === 1 && isKonvaText(items[0])) {
       dispatch(customizeActions.setControlBar(ControlBars.Text))
     } else {
-      const controlbar = store.getState().customize.controlBar
-      if (controlbar === ControlBars.Text) {
+      const { controlBar, activeTab } = store.getState().customize
+      if (controlBar === ControlBars.Text) {
         dispatch(customizeActions.setControlBar(ControlBars.Default))
+      }
+      if (activeTab === CustomizeTab.FontFamily || activeTab === CustomizeTab.FontColors) {
+        dispatch(customizeActions.setActiveTab(CustomizeTab.Text))
       }
     }
     const interactionNodeIds = items.map((item) => item.id() as string)
@@ -223,11 +232,77 @@ export const useKonva = (options: UseKonvaOptions = {}): StageData => {
     }
   }
 
+  const getLoadedFonts = () => {
+    return loadedFonts.current
+  }
+
+  const addLoadedFont = (name: string, attrs: FontAttributes) => {
+    let font = loadedFonts.current[name]
+    if (!font) {
+      font = []
+      loadedFonts.current[name] = font
+    }
+
+    font.push(attrs)
+  }
+
+  const isFontLoaded = (name: string, attrs?: FontAttributes) => {
+    const loadedFonts = getLoadedFonts()
+    const font = loadedFonts[name]
+    if (!font) {
+      return false
+    }
+
+    if (attrs) {
+      return font.some((fontAttrs) => lodash.isEqual(fontAttrs, attrs))
+    }
+
+    return true
+  }
+
+  const loadFont = async (name: string, attrs: FontAttributes) => {
+    const isLoaded = isFontLoaded(name, attrs)
+    if (!isLoaded) {
+      const { url, ...descriptor } = attrs
+      const newFont = new FontFace(name, `url("${url}")`, descriptor)
+      document.fonts.add(newFont)
+      return newFont.load().then((res) => {
+        addLoadedFont(name, attrs)
+      })
+    }
+    return Promise.resolve()
+  }
+
+  const loadTypeface = (typeface: TypeFace) => {
+    const { name, fonts } = typeface
+    return fonts.forEach((font) => {
+      loadFont(name, font)
+    })
+  }
+
   useEffect(() => {
     const initialItems = options.initialItems
 
     if (initialItems) {
       setItems(initialItems)
+      const textItems = initialItems?.filter(
+        (item) => item.className === 'Text' && item.attrs.fontFamily && item.attrs.fontAttrs
+      )
+      console.log({ textItems })
+
+      const textFonts = textItems.map((item) => {
+        return {
+          fontFamily: item.attrs.fontFamily!,
+          attrs: item.attrs.fontAttrs!,
+        }
+      })
+
+      textFonts.forEach(({ fontFamily, attrs }) => {
+        loadFont(fontFamily, attrs).then(() => {
+          const items = store.getState().customize.items
+          setItems(items)
+        })
+      })
     }
   }, [])
 
@@ -247,5 +322,8 @@ export const useKonva = (options: UseKonvaOptions = {}): StageData => {
     getSelectedItems,
     selectItems,
     handleSelectItem,
+    isFontLoaded,
+    loadFont,
+    loadTypeface,
   }
 }
