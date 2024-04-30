@@ -18,7 +18,7 @@ const buttonVariants = cva(
         primary: 'text-primary-01 bg-primary-02 relative transition-opacity btn-primary overflow-hidden',
         secondary: cx('text-primary-02 bg-transparent transition-all hover:text-disabled disabled:opacity-60'),
         text: 'text-disabled transtion-colors hover:text-primary-02 active:text-primary-02 active:opacity-90',
-        outline: 'border border-input bg-background hover:bg-accent hover:text-accent-foreground',
+        outline: cx('border border-primary-02 bg-transparent transition-opacity hover:opacity-80'),
 
         // The `default` variant is the default variant for the component.
         default: 'bg-primary text-primary-foreground hover:bg-primary/90',
@@ -33,7 +33,7 @@ const buttonVariants = cva(
         unset: cx('w-auto h-auto'),
         icon: 'size-10',
         'icon-sm': 'size-8',
-
+        'icon-xs': 'size-6',
         sm: 'h-9 rounded-md px-3',
         lg: 'h-11 rounded-md px-8',
       },

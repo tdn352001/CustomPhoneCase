@@ -1,13 +1,13 @@
-import React from "react";
-import { Slider } from "@/components/ui/slider";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Separator } from "@/components/ui/separator";
+import React from 'react'
+import { Slider } from '@/components/ui/slider'
+import { Checkbox } from '@/components/ui/checkbox'
+import { Separator } from '@/components/ui/separator'
 
 const CommonFilter = () => {
   return (
-    <div className="space-y-3 lg:space-y-5">
+    <div className="space-y-5">
       <div className="space-y-3">
-        <span className="text-base uppercase lg:text-xl">Filter by price</span>
+        <span className="text-base uppercase  lg:text-xl">Filter by price</span>
         <Slider defaultValue={[10, 50]} />
         <div className="flex items-center justify-between">
           <span className="text-sm">0đ</span>
@@ -34,7 +34,7 @@ const CommonFilter = () => {
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default CommonFilter;
+export default CommonFilter

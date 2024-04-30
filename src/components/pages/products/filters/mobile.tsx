@@ -1,12 +1,12 @@
-import React from "react";
-import SearchProducts from "./search";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { Button } from "@/components/ui/button";
-import cx from "clsx";
-import SvgIcon from "@/components/ui/svg-icon";
-import HeaderNav from "@/components/layout/base/header/nav";
-import SortBy from "@/components/pages/products/filters/sort-by";
-import CommonFilter from "@/components/pages/products/filters/common";
+import React from 'react'
+import SearchProducts from './search'
+import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet'
+import { Button } from '@/components/ui/button'
+import cx from 'clsx'
+import SvgIcon from '@/components/ui/svg-icon'
+import HeaderNav from '@/components/layout/base/header/nav'
+import SortBy from '@/components/pages/products/filters/sort-by'
+import CommonFilter from '@/components/pages/products/filters/common'
 
 const MobileFilter = () => {
   return (
@@ -23,13 +23,18 @@ const MobileFilter = () => {
 
         <SheetContent className="p-0">
           <div className="w-full">
-            <SortBy />
-            <CommonFilter />
+            <div className="px-5 py-3 border-b">
+              <span className="block text-xl font-bold">Filter</span>
+            </div>
+            <div className="w-full p-5 flex flex-col gap-5">
+              <SortBy />
+              <CommonFilter />
+            </div>
           </div>
         </SheetContent>
       </Sheet>
     </div>
-  );
-};
+  )
+}
 
-export default MobileFilter;
+export default MobileFilter

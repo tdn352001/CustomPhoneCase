@@ -8,6 +8,7 @@ const AOS = ({ children }: PropsWithChildren) => {
   useEffect(() => {
     aos.init({
       offset: 120,
+      once: true,
     })
   }, [])
   return children

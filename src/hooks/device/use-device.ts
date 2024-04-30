@@ -19,3 +19,7 @@ export const useDesktopMediaQuery = (
 export const useTabletMediaQuery = (options: UseMediaQueryOptions = { initializeWithValue: false }) => {
   return useMediaQuery(`(min-width: ${MOBILE_WIDTH}px) and (max-width: ${TABLET_WIDTH}px)`, options)
 }
+
+export const useMobileMediaQuery = (options: UseMediaQueryOptions = { initializeWithValue: false }) => {
+  return useMediaQuery(`(max-width: ${MOBILE_WIDTH}px)`, options)
+}

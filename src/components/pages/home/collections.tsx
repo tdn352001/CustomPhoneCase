@@ -1,6 +1,5 @@
 import React from 'react'
 import SvgIcon from '@/components/ui/svg-icon'
-import cx from 'clsx'
 import Link from 'next/link'
 
 const collections = [
