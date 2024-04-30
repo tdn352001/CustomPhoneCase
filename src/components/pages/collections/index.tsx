@@ -4,6 +4,7 @@ import { cn } from '@/libs/utils/tw-merge'
 import Link from 'next/link'
 import React from 'react'
 import cx from 'clsx'
+import { dynamicRouters } from '@/libs/constants/routers'
 
 const collections = [
   {
@@ -61,12 +62,12 @@ const CollectionsPage = () => {
                   <h4 className="text-2xl py-1 border-b lg:text-4xl lg:py-2" data-aos="fade-up" data-aos-delay="50">
                     {item.name}
                   </h4>
-                  <p className="text-sm mt-3 lg:text-base" data-aos="fade-up" data-aos-delay="50">
+                  <p className="text-sm mt-3 text-disabled lg:text-base" data-aos="fade-up" data-aos-delay="50">
                     {item.desc}
                   </p>
                   <Link
                     className={cn(buttonVariants({ className: 'mt-5' }))}
-                    href={'#'}
+                    href={dynamicRouters.collectionDetail('123')}
                     data-aos="fade-up"
                     data-aos-delay="50"
                   >

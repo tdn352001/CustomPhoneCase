@@ -6,7 +6,7 @@ import React, { PropsWithChildren } from 'react'
 const BaseLayout = ({ children }: PropsWithChildren) => {
   return (
     <AOS>
-      <div className="overflow-hidden">
+      <div>
         <Header />
         <main className="min-h-dvh">{children}</main>
         <Footer />

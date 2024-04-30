@@ -10,4 +10,5 @@ export const routers = {
 
 export const dynamicRouters = {
   productDetail: (id: string) => `/products/${id}`,
+  collectionDetail: (id: string) => `/collections/${id}`,
 }

@@ -17,11 +17,11 @@ const BreadCrumb = () => {
         </BreadcrumbItem>
         <BreadcrumbSeparator />
         <BreadcrumbItem>
-          <BreadcrumbLink href={routers.products}>Products</BreadcrumbLink>
+          <BreadcrumbLink href={routers.collections}>Collections</BreadcrumbLink>
         </BreadcrumbItem>
         <BreadcrumbSeparator />
         <BreadcrumbItem>
-          <BreadcrumbPage>Product Name</BreadcrumbPage>
+          <BreadcrumbPage>Collection Name</BreadcrumbPage>
         </BreadcrumbItem>
       </BreadcrumbList>
     </BreadcrumbComponent>

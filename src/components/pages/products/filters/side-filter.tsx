@@ -1,12 +1,12 @@
-import SearchProducts from "@/components/pages/products/filters/search";
-import CommonFilter from "@/components/pages/products/filters/common";
+import SearchProducts from '@/components/pages/products/filters/search'
+import CommonFilter from '@/components/pages/products/filters/common'
 
 const SideFilter = () => {
   return (
-    <div className="space-y-5 sticky top-0">
+    <div className="space-y-5 sticky top-5">
       <SearchProducts />
       <CommonFilter />
     </div>
-  );
-};
-export default SideFilter;
+  )
+}
+export default SideFilter
