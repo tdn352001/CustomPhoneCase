@@ -253,6 +253,96 @@ export const useKonva = (options: UseKonvaOptions = {}) => {
     }
   }
 
+  const MOVE_STEP = 16
+
+  const moveToLeft = () => {
+    const selectedItems = getSelectedItems()
+    if (selectItems.length) {
+      const items = getItems()
+      const newItems = items.map((item) => {
+        const selectItem = selectedItems.find((selectedItem) => selectedItem.id() === item.id)
+        if (selectItem) {
+          const x = item.attrs.x || selectItem.x() || 0
+          return {
+            ...item,
+            attrs: {
+              ...item.attrs,
+              x: x - MOVE_STEP,
+            },
+          }
+        }
+        return item
+      })
+      setItems(newItems)
+    }
+  }
+
+  const moveToRight = () => {
+    const selectedItems = getSelectedItems()
+    if (selectItems.length) {
+      const items = getItems()
+      const newItems = items.map((item) => {
+        const selectItem = selectedItems.find((selectedItem) => selectedItem.id() === item.id)
+        if (selectItem) {
+          const x = item.attrs.x || selectItem.x() || 0
+          return {
+            ...item,
+            attrs: {
+              ...item.attrs,
+              x: x + MOVE_STEP,
+            },
+          }
+        }
+        return item
+      })
+      setItems(newItems)
+    }
+  }
+
+  const moveToTop = () => {
+    const selectedItems = getSelectedItems()
+    if (selectItems.length) {
+      const items = getItems()
+      const newItems = items.map((item) => {
+        const selectItem = selectedItems.find((selectedItem) => selectedItem.id() === item.id)
+        if (selectItem) {
+          const y = item.attrs.y || selectItem.y() || 0
+          return {
+            ...item,
+            attrs: {
+              ...item.attrs,
+              y: y - MOVE_STEP,
+            },
+          }
+        }
+        return item
+      })
+      setItems(newItems)
+    }
+  }
+
+  const moveToBottom = () => {
+    const selectedItems = getSelectedItems()
+    if (selectItems.length) {
+      const items = getItems()
+      const newItems = items.map((item) => {
+        const selectItem = selectedItems.find((selectedItem) => selectedItem.id() === item.id)
+        if (selectItem) {
+          const y = item.attrs.y || selectItem.y() || 0
+          return {
+            ...item,
+            attrs: {
+              ...item.attrs,
+              y: y + MOVE_STEP,
+            },
+          }
+        }
+        return item
+      })
+      setItems(newItems)
+    }
+  }
+
   const getLoadedFonts = () => {
     return loadedFonts.current
   }
@@ -387,6 +477,10 @@ export const useKonva = (options: UseKonvaOptions = {}) => {
     loadTypeface,
     goToPast,
     goToFuture,
+    moveToLeft,
+    moveToRight,
+    moveToTop,
+    moveToBottom,
   }
 }
 
