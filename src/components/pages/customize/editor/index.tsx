@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react'
 import Stage from './stage'
+import { HotkeysProvider } from 'react-hotkeys-hook'
 
 const Editor = () => {
   const [ready, setReady] = React.useState(false)
@@ -20,7 +21,11 @@ const Editor = () => {
       style={{ opacity: ready ? 1 : 0 }}
       ref={containerRef}
     >
-      {ready && <Stage containerWidth={dimension.width} containerHeight={dimension.height} />}
+      {ready && (
+        <HotkeysProvider>
+          <Stage containerWidth={dimension.width} containerHeight={dimension.height} />
+        </HotkeysProvider>
+      )}
     </div>
   )
 }

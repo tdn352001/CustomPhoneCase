@@ -38,6 +38,8 @@ interface CustomizeState {
   }
   items: KonvaNodeData[]
   interactionNodeIds?: string[]
+  canUndo: boolean
+  canRedo: boolean
 }
 
 const getMaterial = (modelId: number) => materials.find((item) => item.modelId === modelId)!
@@ -55,6 +57,8 @@ const initialState: CustomizeState = {
     height: 2000,
   },
   items: [],
+  canUndo: false,
+  canRedo: false,
 }
 
 const customizeSlice = createSlice({
@@ -110,8 +114,18 @@ const customizeSlice = createSlice({
     removeItem: (state, action: PayloadAction<string>) => {
       state.items = state.items.filter((item) => item.id !== action.payload)
     },
+    removeItems: (state, action: PayloadAction<string[]>) => {
+      const items = action.payload
+      state.items = state.items.filter((item) => !items.includes(item.id))
+    },
     setInteractionNodeIds: (state, action: PayloadAction<string[]>) => {
       state.interactionNodeIds = action.payload
+    },
+    setCanUndo: (state, action: PayloadAction<boolean>) => {
+      state.canUndo = action.payload
+    },
+    setCanRedo: (state, action: PayloadAction<boolean>) => {
+      state.canRedo = action.payload
     },
     resetState: () => initialState,
   },
@@ -141,6 +155,8 @@ export const customizeSelector = {
 
     return state.customize.items.find((item) => item.id === firstInteractionNodeId)
   },
+  canUndo: (state: RootState) => state.customize.canUndo,
+  canRedo: (state: RootState) => state.customize.canRedo,
 }
 
 export const customizeActions = {

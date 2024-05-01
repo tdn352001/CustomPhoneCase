@@ -114,7 +114,7 @@ const TextStyle = () => {
             dispatch(customizeActions.setActiveTab(CustomizeTab.FontFamily))
           }}
         >
-          <span>{textNode.fontFamily()}</span>
+          <span className="block whitespace-nowrap"> {textNode.fontFamily()}</span>
           <ChevronDown className="size-5 text-disabled" />
         </button>
         <div className="relative h-10 px-3 flex items-center gap-2 border rounded-lg">

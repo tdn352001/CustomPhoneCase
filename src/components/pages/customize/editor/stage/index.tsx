@@ -6,6 +6,7 @@ import { useKonvaContext } from '@/components/pages/customize/hooks/use-konva-co
 import { useStageEvents } from '@/components/pages/customize/hooks/use-stage-events'
 import TextArea from '@/components/pages/customize/editor/stage/text-area'
 import { useEffect } from 'react'
+import { useKonvaKeyboardEvents } from '@/components/pages/customize/hooks/use-keyboard-event'
 
 type StageProps = {
   containerWidth: number
@@ -20,6 +21,8 @@ const Stage = ({ containerWidth, containerHeight }: StageProps) => {
   const { stageRef } = konvaContext
 
   const stageEvents = useStageEvents(konvaContext)
+
+  useKonvaKeyboardEvents(konvaContext)
 
   useEffect(() => {
     ;(window as any).stage = stageRef.current

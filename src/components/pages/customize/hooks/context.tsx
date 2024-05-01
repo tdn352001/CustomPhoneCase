@@ -12,82 +12,68 @@ import { KonvaEventObject, Node } from 'konva/lib/Node'
 import lodash from 'lodash'
 import React, { ReactNode, createContext, useEffect, useRef } from 'react'
 
-type StageData = {
-  stageRef: React.RefObject<Konva.Stage>
-  transformerRef: React.RefObject<Konva.Transformer>
-  selectionBoxRef: React.RefObject<Konva.Rect>
-  textAreaRef: React.RefObject<HTMLTextAreaElement>
-  setItems: (items: KonvaNodeData[]) => void
-  getItem: (id: string) => KonvaNodeData | undefined
-  addItem: (item: Omit<KonvaNodeData, 'id'>) => void
-  addSticker: (item: StickerItem) => void
-  addImage: (src: string) => void
-  addText: (options: { content?: string; fontSize?: number }) => void
-  updateItem: (id: string, attrs: KonvaNodeAttributes) => void
-  removeItem: (id: string) => void
-  getSelectedItems: () => Node[]
-  selectItems: (item: Node | Node[]) => void
-  handleSelectItem: (e: KonvaEventObject<Event>) => void
-  isFontLoaded: (name: string, attrs?: FontAttributes) => boolean
-  loadFont: (name: string, attrs: FontAttributes) => Promise<void>
-  loadTypeface: (typeface: TypeFace) => void
-}
-
+// export type StageData = {
+//   stageRef: React.RefObject<Konva.Stage>
+//   transformerRef: React.RefObject<Konva.Transformer>
+//   selectionBoxRef: React.RefObject<Konva.Rect>
+//   textAreaRef: React.RefObject<HTMLTextAreaElement>
+//   setItems: (items: KonvaNodeData[]) => void
+//   getItem: (id: string) => KonvaNodeData | undefined
+//   addItem: (item: Omit<KonvaNodeData, 'id'>) => void
+//   addSticker: (item: StickerItem) => void
+//   addImage: (src: string) => void
+//   addText: (options: { content?: string; fontSize?: number }) => void
+//   updateItem: (id: string, attrs: KonvaNodeAttributes) => void
+//   removeItem: (id: string) => void
+//   removeItems: (ids: string[]) => void
+//   getSelectedItems: () => Node[]
+//   removeSelectedItems: () => void
+//   selectItems: (item: Node | Node[]) => void
+//   selectAllItems: () => void
+//   handleSelectItem: (e: KonvaEventObject<Event>) => void
+//   isFontLoaded: (name: string, attrs?: FontAttributes) => boolean
+//   loadFont: (name: string, attrs: FontAttributes) => Promise<void>
+//   loadTypeface: (typeface: TypeFace) => void
+// }
 type UseKonvaOptions = {
   initialItems?: KonvaNodeData[]
 }
 
-const fallbackStageData: StageData = {
-  stageRef: { current: null },
-  transformerRef: { current: null },
-  selectionBoxRef: { current: null },
-  textAreaRef: { current: null },
-  setItems: () => {},
-  getItem: () => undefined,
-  addItem: () => {},
-  addSticker: () => {},
-  addImage: () => {},
-  addText: () => {},
-  updateItem: () => {},
-  removeItem: () => {},
-  getSelectedItems: () => [],
-  selectItems: () => {},
-  handleSelectItem: () => {},
-  isFontLoaded: () => false,
-  loadFont: async () => {},
-  loadTypeface: () => {},
-}
-
-export const KonvaContext = createContext<StageData>(fallbackStageData)
-
-export type KonvaProviderProps = StageData & {
-  children?: ReactNode
-}
-
-export const KonvaProvider = (props: KonvaProviderProps) => {
-  const { children, ...data } = props
-
-  return <KonvaContext.Provider value={data}>{children}</KonvaContext.Provider>
-}
-
-export const useKonva = (options: UseKonvaOptions = {}): StageData => {
+export const useKonva = (options: UseKonvaOptions = {}) => {
   const stageRef = useRef<Konva.Stage>(null)
   const transformerRef = useRef<Konva.Transformer>(null)
   const selectionBoxRef = useRef<Konva.Rect>(null)
   const textAreaRef = useRef<HTMLTextAreaElement>(null)
   const loadedFonts = useRef<Record<string, FontAttributes[]>>({})
 
+  const pastRef = useRef([] as KonvaNodeData[][])
+  const futureRef = useRef([] as KonvaNodeData[][])
+
   const dispatch = useAppDispatch()
 
-  const setItems = (items: KonvaNodeData[]) => {
-    dispatch(customizeActions.setItems(items))
+  const getItems = () => {
+    return store.getState().customize.items
   }
 
   const getItem = (id: string) => {
     return store.getState().customize.items.find((item) => item.id === id)
   }
 
+  const updateWorkFlow = () => {
+    const items = getItems()
+    pastRef.current.push(items)
+    futureRef.current = []
+    dispatch(customizeActions.setCanUndo(true))
+    dispatch(customizeActions.setCanRedo(false))
+  }
+
+  const setItems = (items: KonvaNodeData[]) => {
+    updateWorkFlow()
+    dispatch(customizeActions.setItems(items))
+  }
+
   const addItem = (item: Omit<KonvaNodeData, 'id'>) => {
+    updateWorkFlow()
     dispatch(customizeActions.addItem(item))
   }
 
@@ -166,17 +152,31 @@ export const useKonva = (options: UseKonvaOptions = {}): StageData => {
   }
 
   const updateItem = (id: string, attrs: KonvaNodeAttributes) => {
+    updateWorkFlow()
     dispatch(customizeActions.updateItem({ id, attrs }))
   }
 
   const removeItem = (id: string) => {
+    updateWorkFlow()
     dispatch(customizeActions.removeItem(id))
+  }
+
+  const removeItems = (ids: string[]) => {
+    updateWorkFlow()
+    dispatch(customizeActions.removeItems(ids))
   }
 
   const getSelectedItems = () => {
     const transformer = transformerRef.current
 
     return transformer?.getNodes() ?? []
+  }
+
+  const removeSelectedItems = () => {
+    const selectedItems = getSelectedItems()
+    if (selectedItems.length === 0) return
+    removeItems(selectedItems.map((item) => item.id() as string))
+    selectItems([])
   }
 
   const selectItems = (item: Node | Node[]) => {
@@ -211,6 +211,27 @@ export const useKonva = (options: UseKonvaOptions = {}): StageData => {
     }
     const interactionNodeIds = items.map((item) => item.id() as string)
     dispatch(customizeActions.setInteractionNodeIds(interactionNodeIds))
+  }
+
+  const selectAllItems = () => {
+    const stage = stageRef.current
+    if (!stage) {
+      return
+    }
+
+    const layers = stage.getChildren()
+    if (!layers) {
+      return
+    }
+
+    const mainLayers = layers[1]
+    if (!mainLayers) {
+      return
+    }
+
+    const group = mainLayers.getChildren()[0] as Konva.Group
+    const nodes = group.getChildren()
+    selectItems(nodes)
   }
 
   const handleSelectItem = (e: KonvaEventObject<Event>) => {
@@ -280,27 +301,63 @@ export const useKonva = (options: UseKonvaOptions = {}): StageData => {
     })
   }
 
+  const goToPast = () => {
+    const previousItem = pastRef.current.pop()
+    console.log({ previousItem })
+    if (previousItem) {
+      futureRef.current.push(getItems())
+      dispatch(customizeActions.setItems(previousItem))
+      dispatch(customizeActions.setCanUndo(pastRef.current.length > 0))
+      dispatch(customizeActions.setCanRedo(true))
+    } else {
+      dispatch(customizeActions.setCanUndo(false))
+    }
+  }
+
+  const goToFuture = () => {
+    const nextItem = futureRef.current.pop()
+    if (nextItem) {
+      pastRef.current.push(getItems())
+      dispatch(customizeActions.setItems(nextItem))
+      dispatch(customizeActions.setCanUndo(true))
+      dispatch(customizeActions.setCanRedo(futureRef.current.length > 0))
+    } else {
+      dispatch(customizeActions.setCanRedo(false))
+    }
+  }
+
   useEffect(() => {
     const initialItems = options.initialItems
 
     if (initialItems) {
-      setItems(initialItems)
+      dispatch(customizeActions.setItems(initialItems))
       const textItems = initialItems?.filter(
         (item) => item.className === 'Text' && item.attrs.fontFamily && item.attrs.fontAttrs
       )
-      console.log({ textItems })
 
       const textFonts = textItems.map((item) => {
         return {
+          nodeId: item.id || item.attrs.id,
           fontFamily: item.attrs.fontFamily!,
           attrs: item.attrs.fontAttrs!,
         }
       })
 
-      textFonts.forEach(({ fontFamily, attrs }) => {
+      textFonts.forEach(({ nodeId, fontFamily, attrs }) => {
         loadFont(fontFamily, attrs).then(() => {
-          const items = store.getState().customize.items
-          setItems(items)
+          const stage = stageRef.current
+          console.log({
+            stage,
+            nodeId,
+          })
+          if (stage && nodeId) {
+            const textNode = stage.findOne(`#${nodeId}`) as Konva.Text
+            console.log({ textNode })
+            if (textNode) {
+              textNode.hide()
+              textNode.show()
+            }
+          }
         })
       })
     }
@@ -319,11 +376,30 @@ export const useKonva = (options: UseKonvaOptions = {}): StageData => {
     addText,
     updateItem,
     removeItem,
+    removeItems,
     getSelectedItems,
+    removeSelectedItems,
     selectItems,
+    selectAllItems,
     handleSelectItem,
     isFontLoaded,
     loadFont,
     loadTypeface,
+    goToPast,
+    goToFuture,
   }
+}
+
+export type StageData = ReturnType<typeof useKonva>
+
+export const KonvaContext = createContext<StageData | null>(null)
+
+export type KonvaProviderProps = StageData & {
+  children?: ReactNode
+}
+
+export const KonvaProvider = (props: KonvaProviderProps) => {
+  const { children, ...data } = props
+
+  return <KonvaContext.Provider value={data}>{children}</KonvaContext.Provider>
 }
