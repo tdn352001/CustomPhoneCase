@@ -62,6 +62,10 @@ export const useKonva = (options: UseKonvaOptions = {}) => {
   const updateWorkFlow = () => {
     const items = getItems()
     pastRef.current.push(items)
+    if (pastRef.current.length > 12) {
+      pastRef.current.shift()
+    }
+
     futureRef.current = []
     dispatch(customizeActions.setCanUndo(true))
     dispatch(customizeActions.setCanRedo(false))
@@ -257,7 +261,8 @@ export const useKonva = (options: UseKonvaOptions = {}) => {
 
   const moveToLeft = () => {
     const selectedItems = getSelectedItems()
-    if (selectItems.length) {
+    if (selectedItems.length) {
+      console.log({ selectedItems })
       const items = getItems()
       const newItems = items.map((item) => {
         const selectItem = selectedItems.find((selectedItem) => selectedItem.id() === item.id)
@@ -279,7 +284,7 @@ export const useKonva = (options: UseKonvaOptions = {}) => {
 
   const moveToRight = () => {
     const selectedItems = getSelectedItems()
-    if (selectItems.length) {
+    if (selectedItems.length) {
       const items = getItems()
       const newItems = items.map((item) => {
         const selectItem = selectedItems.find((selectedItem) => selectedItem.id() === item.id)
@@ -301,7 +306,7 @@ export const useKonva = (options: UseKonvaOptions = {}) => {
 
   const moveToTop = () => {
     const selectedItems = getSelectedItems()
-    if (selectItems.length) {
+    if (selectedItems.length) {
       const items = getItems()
       const newItems = items.map((item) => {
         const selectItem = selectedItems.find((selectedItem) => selectedItem.id() === item.id)
@@ -323,7 +328,7 @@ export const useKonva = (options: UseKonvaOptions = {}) => {
 
   const moveToBottom = () => {
     const selectedItems = getSelectedItems()
-    if (selectItems.length) {
+    if (selectedItems.length) {
       const items = getItems()
       const newItems = items.map((item) => {
         const selectItem = selectedItems.find((selectedItem) => selectedItem.id() === item.id)

@@ -7,17 +7,7 @@ import { useKonvaContext } from '@/components/pages/customize/hooks/use-konva-co
 import Konva from 'konva'
 import { useAppSelector } from '@/hooks/redux'
 import { customizeSelector } from '@/store/slices/customize'
-
-const Group = ({ className, title, children, ...props }: HTMLAttributes<HTMLDivElement> & { title?: string }) => {
-  return (
-    <div className={cx('flex flex-col gap-3', className)} {...props}>
-      <p className="text-xl text-disabled">{title}</p>
-      <div className="flex flex-wrap gap-2">{children}</div>
-    </div>
-  )
-}
-
-const documentColors = ['#fffff', '#000000']
+import { useDebounceCallback } from 'usehooks-ts'
 
 const FontColors = () => {
   const { updateItem, getSelectedItems, loadTypeface } = useKonvaContext()
@@ -25,12 +15,16 @@ const FontColors = () => {
   const textNode = selectedItems[0] as Konva.Text
   const nodeId = textNode?.id()
   const _ = useAppSelector(customizeSelector.interactionNodeIds)!
-  // const [color, setColor] = useState(textNode.fill())
 
   const color = textNode.fill()
+
+  const updateStateDebounced = useDebounceCallback((color) => {
+    updateItem(nodeId, { fill: color })
+  }, 500)
+
   const handleColorChange = (color: string) => {
-    // setColor(color)
-    updateItem(textNode.id(), { fill: color })
+    textNode.fill(color)
+    updateStateDebounced(color)
   }
 
   return (
