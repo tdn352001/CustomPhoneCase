@@ -14,12 +14,29 @@ export type GetPhotoResponse = {
   }
 }
 
-export type GetStickersResponse = {
-  data: StickerGroup[]
+export type GetStickerGroupsRequest = {
+  limit?: number
+  offset?: number
 }
 
-export type GetStickerDetailResponse = {
-  data: StickerItem[]
+export type GetStickerGroupsResponse = {
+  data: {
+    sticker_groups: StickerGroup[]
+    total: number
+  }
+}
+
+export type GetStickerGroupRequest = {
+  limit?: number
+  offset?: number
+  group_id?: string
+}
+
+export type GetStickerGroupResponse = {
+  data: {
+    stickers: StickerItem[]
+    total: number
+  }
 }
 
 export type GetFontsRequest = {

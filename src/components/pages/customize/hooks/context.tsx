@@ -97,7 +97,7 @@ export const useKonva = (options: UseKonvaOptions = {}) => {
         y: y + height / 2 - defaultSize / 2,
         width: defaultSize,
         height: defaultSize,
-        src: item.sourItemSrc,
+        src: item.url,
       },
     })
   }

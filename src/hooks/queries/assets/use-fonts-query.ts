@@ -17,12 +17,14 @@ export const useFontsQuery = (options: UseFontsQueryOptions = {}) => {
           offset: pageParam * limit,
         })
         .then((res) => {
+          const { font_categories, total } = res.data
           if (options.onSuccess) {
-            options.onSuccess(res.data.font_categories)
+            options.onSuccess(font_categories || [])
           }
           return {
             data: {
-              ...res.data,
+              font_categories: font_categories || [],
+              total,
               page: pageParam,
               limit,
             },

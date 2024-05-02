@@ -1,13 +1,15 @@
+import { getApi } from '@/libs/axios'
 import axios from 'axios'
 import {
-  GetPhotoRequest,
-  GetPhotoResponse,
-  GetStickerDetailResponse,
-  GetStickersResponse,
   GetFontsRequest,
   GetFontsResponse,
+  GetPhotoRequest,
+  GetPhotoResponse,
+  GetStickerGroupRequest,
+  GetStickerGroupResponse,
+  GetStickerGroupsRequest,
+  GetStickerGroupsResponse,
 } from './types'
-import { getApi } from '@/libs/axios'
 
 export const assetsService = {
   async getPhotos(request: GetPhotoRequest) {
@@ -18,12 +20,14 @@ export const assetsService = {
       .then((res) => res.data)
   },
 
-  async getStickers() {
-    return axios.get<GetStickersResponse>('/api/stickers').then((res) => res.data)
+  async getStickers(request: GetStickerGroupsRequest) {
+    return getApi<GetStickerGroupsResponse>('/stickerGroups', {
+      params: request,
+    })
   },
 
-  async getStickerItem(id: string | number) {
-    return axios.get<GetStickerDetailResponse>(`/api/stickers/${id}`).then((res) => res.data)
+  async getStickerItem(id: string | number, request: GetStickerGroupRequest) {
+    return getApi<GetStickerGroupResponse>(`/stickers`, { params: request })
   },
 
   async getFonts(request: GetFontsRequest) {

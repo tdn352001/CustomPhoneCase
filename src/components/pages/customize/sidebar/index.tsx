@@ -53,11 +53,7 @@ const Sidebar = () => {
       case CustomizeTab.Text:
         return <TextTab />
       case CustomizeTab.Stickers:
-        return (
-          <Suspense fallback={<StickerTabSkeleton />}>
-            <StickersTab />
-          </Suspense>
-        )
+        return <StickersTab />
       case CustomizeTab.FontFamily:
         return <FontFamilies />
       case CustomizeTab.FontColors:

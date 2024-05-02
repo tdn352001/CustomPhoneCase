@@ -1,40 +1,34 @@
 export enum SortOrder {
-  Asc = "asc",
-  Desc = "desc",
+  Asc = 'asc',
+  Desc = 'desc',
 }
 
 export type BaseQueryParams<T extends string | number = string> = {
-  limit?: number;
-  offset?: number;
-  sort?: T;
-  order?: SortOrder;
-};
+  limit?: number
+  offset?: number
+  sort?: T
+  order?: SortOrder
+}
 
 export type UnsplashImage = {
-  id: string;
-  url: string;
-  description: string;
-  width: number;
-  height: number;
+  id: string
+  url: string
+  description: string
+  width: number
+  height: number
   user: {
-    name: string;
-    url: string;
-  };
-};
+    name: string
+    url: string
+  }
+}
 
 export type StickerGroup = {
-  sourGroupID: number;
-  sourGroupName: string;
-  sourGroupSrc: string;
-  showOrder: number;
-  status: number;
-};
+  id: string
+  name: string
+  url: string
+}
 
 export type StickerItem = {
-  sourItemID: number;
-  sourGroupID: number;
-  sourItemSrc: string;
-  showOrder: number;
-  status: number;
-  sourGroupName: string;
-};
+  sticker_group_id: string
+  url: string
+}
