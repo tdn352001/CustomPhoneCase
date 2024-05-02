@@ -1,28 +1,37 @@
-import { fonts } from '@/libs/constants/customize'
 import { TypeFace } from '@/libs/types'
+import { assetsService } from '@/services/assets-service'
 import { useInfiniteQuery } from '@tanstack/react-query'
 
 export type UseFontsQueryOptions = {
   onSuccess?: (data: TypeFace[]) => void
 }
 export const useFontsQuery = (options: UseFontsQueryOptions = {}) => {
-  return useInfiniteQuery<TypeFace[]>({
+  const limit = 30
+
+  return useInfiniteQuery({
     queryKey: ['images'],
     queryFn: async ({ pageParam }) => {
-      return new Promise<TypeFace[]>((resolve) => {
-        setTimeout(() => {
-          resolve(fonts)
-        }, 500)
-      }).then((res) => {
-        if (options.onSuccess) {
-          options.onSuccess(res)
-        }
-        return res
-      })
+      return assetsService
+        .getFonts({
+          limit,
+          offset: pageParam * limit,
+        })
+        .then((res) => {
+          if (options.onSuccess) {
+            options.onSuccess(res.data.font_categories)
+          }
+          return {
+            data: {
+              ...res.data,
+              page: pageParam,
+              limit,
+            },
+          }
+        })
     },
-    initialPageParam: 1,
-    getNextPageParam: (lastPages, pages) => {
-      return 1
+    initialPageParam: 0,
+    getNextPageParam: (lastPages) => {
+      return lastPages.data.page + 1
     },
     staleTime: 60 * 60 * 1000,
   })

@@ -10,7 +10,7 @@ import { customizeSelector } from '@/store/slices/customize'
 import cx from 'clsx'
 import Konva from 'konva'
 import { Check } from 'lucide-react'
-import { useCallback, useMemo } from 'react'
+import { UIEvent, useCallback, useMemo } from 'react'
 
 const FontFamilies = () => {
   const forceUpdate = useForceUpdate()
@@ -24,12 +24,31 @@ const FontFamilies = () => {
     fonts.forEach((font) => loadTypeface(font))
   }, [])
 
-  const { data } = useFontsQuery({
+  const { data, isFetching, fetchNextPage } = useFontsQuery({
     onSuccess: handleFontFetched,
   })
 
+  const currentPage = data?.pages[data.pages.length - 1].data.page || 0
+  const totalItems = data?.pages[data.pages.length - 1].data.total || 0
+  const limit = data?.pages[data.pages.length - 1].data.limit || 10
+
+  const isHasMore = totalItems > (currentPage + 1) * limit
+
+  const handleScroll = useCallback(
+    (event: UIEvent) => {
+      const element = event.target as HTMLDivElement
+
+      const { scrollTop, scrollHeight, clientHeight } = element
+
+      if (scrollHeight - scrollTop - clientHeight > 50 && isHasMore && !isFetching) {
+        fetchNextPage()
+      }
+    },
+    [isHasMore, isFetching, fetchNextPage]
+  )
+
   const fonts = useMemo(() => {
-    return data?.pages.flatMap((page) => page) ?? []
+    return data?.pages.flatMap((page) => page.data.font_categories) ?? []
   }, [data])
 
   const currentFontFamily = textNode?.fontFamily()
@@ -39,7 +58,7 @@ const FontFamilies = () => {
       <div className="h-6">
         <p className="text-lg text-disabled">Fonts</p>
       </div>
-      <ScrollArea className="w-full h-[calc(100%-2.4rem)]">
+      <ScrollArea className="w-full h-[calc(100%-2.4rem)]" onScroll={handleScroll}>
         <div className=" flex flex-col gap-2 px-3 py-2">
           {fonts?.map((item, index) => {
             return (

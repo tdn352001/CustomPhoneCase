@@ -14,13 +14,14 @@ import {
 
 interface LayerItemProps {
   item: KonvaNodeData
+  onClick?: (item: KonvaNodeData) => void
   onRemove?: (item: KonvaNodeData) => void
   onBringForward?: (item: KonvaNodeData) => void
   onSendBackward?: (item: KonvaNodeData) => void
 }
 
 const LayerItem = (props: LayerItemProps) => {
-  const { item, onRemove, onBringForward, onSendBackward } = props
+  const { item, onClick, onRemove, onBringForward, onSendBackward } = props
   const type = item.className
 
   const { attributes, listeners, setNodeRef, setActivatorNodeRef, transform, transition, isDragging } = useSortable({
@@ -38,6 +39,7 @@ const LayerItem = (props: LayerItemProps) => {
     <div
       className="w-full h-[5.25rem] p-2 flex items-center justify-between rounded-xl bg-white shadow-md select-none"
       style={style}
+      onClick={() => onClick?.(item)}
       ref={setNodeRef}
     >
       <Button variant="text" size="unset" ref={setActivatorNodeRef} {...attributes} {...listeners}>

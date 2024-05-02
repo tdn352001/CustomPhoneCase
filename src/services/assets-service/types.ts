@@ -1,4 +1,5 @@
-import { StickerGroup, StickerItem, UnsplashImage } from '@/libs/types'
+import { StickerGroup, StickerItem, TypeFace, UnsplashImage } from '@/libs/types'
+import { off } from 'process'
 
 export type GetPhotoRequest = {
   page?: number
@@ -19,4 +20,16 @@ export type GetStickersResponse = {
 
 export type GetStickerDetailResponse = {
   data: StickerItem[]
+}
+
+export type GetFontsRequest = {
+  limit?: number
+  offset?: number
+}
+
+export type GetFontsResponse = {
+  data: {
+    font_categories: TypeFace[]
+    total: number
+  }
 }

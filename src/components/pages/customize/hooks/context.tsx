@@ -44,6 +44,8 @@ export const useKonva = (options: UseKonvaOptions = {}) => {
   const transformerRef = useRef<Konva.Transformer>(null)
   const selectionBoxRef = useRef<Konva.Rect>(null)
   const textAreaRef = useRef<HTMLTextAreaElement>(null)
+  const interactionBoxRef = useRef<HTMLDivElement>(null)
+
   const loadedFonts = useRef<Record<string, FontAttributes[]>>({})
 
   const pastRef = useRef([] as KonvaNodeData[][])
@@ -181,6 +183,18 @@ export const useKonva = (options: UseKonvaOptions = {}) => {
     if (selectedItems.length === 0) return
     removeItems(selectedItems.map((item) => item.id() as string))
     selectItems([])
+  }
+
+  const selectById = (id: string) => {
+    const stage = stageRef.current
+    if (!stage) {
+      return
+    }
+
+    const node = stage.findOne(`#${id}`)
+    if (node) {
+      selectItems(node)
+    }
   }
 
   const selectItems = (item: Node | Node[]) => {
@@ -463,6 +477,7 @@ export const useKonva = (options: UseKonvaOptions = {}) => {
     transformerRef,
     selectionBoxRef,
     textAreaRef,
+    interactionBoxRef,
     setItems,
     getItem,
     addItem,
@@ -474,6 +489,7 @@ export const useKonva = (options: UseKonvaOptions = {}) => {
     removeItems,
     getSelectedItems,
     removeSelectedItems,
+    selectById,
     selectItems,
     selectAllItems,
     handleSelectItem,

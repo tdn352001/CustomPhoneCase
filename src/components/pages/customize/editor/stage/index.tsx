@@ -18,7 +18,7 @@ const Stage = ({ containerWidth, containerHeight }: StageProps) => {
 
   const konvaContext = useKonvaContext()
 
-  const { stageRef } = konvaContext
+  const { stageRef, interactionBoxRef } = konvaContext
 
   const stageEvents = useStageEvents(konvaContext)
 
@@ -39,6 +39,10 @@ const Stage = ({ containerWidth, containerHeight }: StageProps) => {
     >
       <div className="absolute inset-0 z-50 pointer-events-none select-none overflow-hidden">
         <TextArea />
+        <div
+          className=" hidden w-40 h-40 absolute top-5 left-5 pointer-events-none bg-red-500"
+          ref={interactionBoxRef}
+        />
       </div>
       <KonvaStage width={width} height={height} ref={stageRef} sca {...stageEvents}>
         <DefaultLayer />

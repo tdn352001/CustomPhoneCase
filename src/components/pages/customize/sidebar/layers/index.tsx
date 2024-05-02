@@ -42,7 +42,7 @@ const LayersTab = () => {
 
   const materialUrl = useAppSelector(customizeSelector.materialUrl)
   const selectedPhoneUrl = useAppSelector(customizeSelector.selectedPhoneUrl)
-  const { setItems, removeItem, selectItems } = useKonvaContext()
+  const { setItems, removeItem, selectItems, selectById } = useKonvaContext()
 
   const sensors = useSensors(
     useSensor(PointerSensor),
@@ -74,6 +74,12 @@ const LayersTab = () => {
 
   const handleDragCancel = useCallback(() => {
     setActive(null)
+  }, [])
+
+  const handleSelectItem = useCallback((item: KonvaNodeData) => {
+    if (item.id) {
+      selectById(item.id)
+    }
   }, [])
 
   const handleBringForward = useCallback((item: KonvaNodeData) => {
@@ -119,6 +125,7 @@ const LayersTab = () => {
                 <LayerItem
                   key={item.id}
                   item={item}
+                  onClick={handleSelectItem}
                   onRemove={handleRemoveItem}
                   onBringForward={handleBringForward}
                   onSendBackward={handleSendBackward}

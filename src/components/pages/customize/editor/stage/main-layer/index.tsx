@@ -2,12 +2,13 @@ import KonvaObjects from '@/components/pages/customize/editor/stage/main-layer/o
 import SelectionBox from '@/components/pages/customize/editor/stage/main-layer/selection-box'
 import { useKonvaContext } from '@/components/pages/customize/hooks/use-konva-context'
 import { useWorkspacePosition } from '@/components/pages/customize/hooks/use-workspace-position'
+import { log } from 'console'
 import Konva from 'konva'
 import React from 'react'
 import { Group, Layer, Transformer } from 'react-konva'
 
 const MainLayer = () => {
-  const { transformerRef, selectionBoxRef } = useKonvaContext()
+  const { transformerRef, selectionBoxRef, interactionBoxRef } = useKonvaContext()
 
   const { workspace, design } = useWorkspacePosition()
 
@@ -30,10 +31,6 @@ const MainLayer = () => {
         keepRatio
         anchorSize={32}
         anchorStrokeWidth={4}
-        // enabledAnchors={['top-left', 'top-right', 'bottom-left', 'bottom-right']}
-        // anchorStroke="black"
-        // borderStroke="black"
-        // anchorFill="black"
         anchorCornerRadius={100}
         borderStrokeWidth={3}
         rotateAnchorOffset={100}
@@ -64,6 +61,35 @@ const MainLayer = () => {
           }
 
           return anchor
+        }}
+        onDragMove={(e) => {
+          // const transformer = transformerRef.current!
+          // const interactionBox = interactionBoxRef.current!
+          // const { x, y } = transformer.getAbsolutePosition()
+          // const { width, height } = transformer.size()
+          // const scaleX = transformer.scaleX()
+          // const scaleY = transformer.scaleY()
+          // const rotation = transformer.rotation()
+          // const position = transformer.position()
+          // const offset = transformer.offset()
+          // const transform = transformer.getAbsoluteTransform()
+          // const matrix = transform.getMatrix()
+          // // console.log({ matrix, x, y })
+          // // console.log(matrix.join(', '))
+          // interactionBox.style.top = `${matrix[5]}px`
+          // interactionBox.style.left = `${matrix[4]}px`
+        }}
+        onTransform={(e) => {
+          // const transformer = transformerRef.current!
+          // const interactionBox = interactionBoxRef.current!
+          // const { x, y } = transformer.getAbsolutePosition()
+          // const {} = transformer.getAbsoluteScale()
+          // let boxX = x
+          // let boxY = y
+          // const rotation = transformer.rotation()
+          // console.log({ rotation, x, y })
+          // interactionBox.style.top = `${boxY}px`
+          // interactionBox.style.left = `${boxX}px`
         }}
       />
     </Layer>

@@ -22,6 +22,7 @@ const initialItems: KonvaNodeData[] = [
       fill: '#da1414',
       align: 'center',
       fontStyle: 'italic bold',
+      rotate: 0.3,
     },
     className: 'Text',
   },
