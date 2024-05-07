@@ -89,7 +89,7 @@ const BottomBar = () => {
   })()
 
   return (
-    <div className="w-full h-full" ref={container}>
+    <div className="w-full h-full select-none" ref={container}>
       <div className="w-auto h-full px-2  border-t flex relative z-100 bg-primary-03">
         {tabs.map((tab) => {
           const handleClick = () => {
@@ -140,12 +140,8 @@ const BottomBar = () => {
         }}
         modal={false}
       >
-        <DrawerContent
-          portalOptions={{
-            container: container.current,
-          }}
-        >
-          <div className="h-[50dvh] pb-14">{drawerContent}</div>
+        <DrawerContent>
+          <div className="h-[50dvh] pb-14 select-none">{drawerContent}</div>
         </DrawerContent>
       </Drawer>
     </div>
