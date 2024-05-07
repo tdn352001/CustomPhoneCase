@@ -101,6 +101,9 @@ const config = {
       transitionDuration: {
         4000: '4000ms',
       },
+      zIndex: {
+        100: '100',
+      },
     },
   },
   plugins: [

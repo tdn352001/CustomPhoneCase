@@ -23,3 +23,7 @@ export const useTabletMediaQuery = (options: UseMediaQueryOptions = { initialize
 export const useMobileMediaQuery = (options: UseMediaQueryOptions = { initializeWithValue: false }) => {
   return useMediaQuery(`(max-width: ${MOBILE_WIDTH}px)`, options)
 }
+
+export const useLargeDevice = () => {
+  return useMediaQuery('(min-width: 1280px)')
+}

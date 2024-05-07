@@ -7,6 +7,10 @@ import Header from './header'
 import Sidebar from './sidebar'
 import { KonvaProvider, useKonva } from '@/components/pages/customize/hooks/context'
 import { fonts } from '@/libs/constants/customize'
+import { useDesktopMediaQuery, useLargeDevice } from '@/hooks/device'
+import { useMediaQuery } from 'usehooks-ts'
+import BottomBar from '@/components/pages/customize/sidebar/mobile'
+import SelectPhone from '@/components/pages/customize/controll-bar/select-phone'
 
 const initialItems: KonvaNodeData[] = [
   {
@@ -31,12 +35,21 @@ const initialItems: KonvaNodeData[] = [
 const CustomizePage = () => {
   const konva = useKonva({ initialItems })
 
-  console.log('CustomizePage')
   return (
     <KonvaProvider {...konva}>
+      <Main />
+    </KonvaProvider>
+  )
+}
+
+const Main = () => {
+  const isDesktop = useLargeDevice()
+
+  if (isDesktop) {
+    return (
       <div className="w-full h-full overflow-hidden [--header-height:57px]">
         <Header />
-        <div className="flex h-[calc(100dvh-var(--header-height))]">
+        <div className="flex h-[calc(100dvh-var(--header-height))] flex-col-reverse xl:flex-row">
           <Sidebar />
           <div className="w-[-webkit-fill-available] min-w-[25rem]">
             <ControlBar />
@@ -46,7 +59,22 @@ const CustomizePage = () => {
           </div>
         </div>
       </div>
-    </KonvaProvider>
+    )
+  }
+
+  return (
+    <div className="w-ful h-dvh overflow-hidden grid grid-cols-1 grid-rows-[57px,minmax(0,1fr)]">
+      <Header history />
+      <div className="w-full h-full grid grid-cols-1 grid-rows-[minmax(0,1fr),57px]">
+        <div className="w-full h-full grid grid-cols-1 grid-rows-[64px,minmax(0,1fr)] bg-primary-04">
+          <div className="w-full h-full  px-5 flex items-center justify-center">
+            <SelectPhone />
+          </div>
+          <Editor />
+        </div>
+        <BottomBar />
+      </div>
+    </div>
   )
 }
 

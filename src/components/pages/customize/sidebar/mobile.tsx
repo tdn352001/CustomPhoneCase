@@ -1,20 +1,20 @@
-'use client'
-
 import { SVGIcon } from '@/assets/svgs'
 import { useKonvaContext } from '@/components/pages/customize/hooks/use-konva-context'
+import { Sheet, SheetContent } from '@/components/ui/sheet'
 import SvgIcon from '@/components/ui/svg-icon'
 import { useUploadFileMutation } from '@/hooks/queries/assets'
 import { useAppDispatch, useAppSelector } from '@/hooks/redux'
 import { getServerFile } from '@/libs/utils/get-server-file'
 import { cn } from '@/libs/utils/tw-merge'
 import { CustomizeTab, customizeActions, customizeSelector } from '@/store/slices/customize'
-import { ChangeEvent, useRef } from 'react'
+import React, { ChangeEvent, useRef, useState } from 'react'
 import FontColors from './font-colors'
-import FontFamilies from './font-families'
 import LayersTab from './layers'
 import StickersTab from './stickers'
+import FontFamilies from './font-families'
 import TemplatesTab from './templates'
 import TextTab from './text'
+import { Drawer, DrawerContent } from '@/components/ui/drawer'
 
 const tabs: { name: CustomizeTab; icon: SVGIcon }[] = [
   {
@@ -35,34 +35,21 @@ const tabs: { name: CustomizeTab; icon: SVGIcon }[] = [
   },
 ]
 
-const Sidebar = () => {
+const BottomBar = () => {
+  const [drawerOpen, setDrawerOpen] = useState(false)
+  const inputRef = useRef<HTMLInputElement>(null)
   const activeTab = useAppSelector(customizeSelector.activeTab)
 
-  const { mutateAsync: uploadFile, isPending } = useUploadFileMutation()
+  const container = useRef<HTMLDivElement>(null)
+
   const { addImage } = useKonvaContext()
+  const { mutateAsync: uploadFile, isPending } = useUploadFileMutation()
+
   const dispatch = useAppDispatch()
-
-  const inputRef = useRef<HTMLInputElement>(null)
-
-  const tabContent = (function getTabContent() {
-    switch (activeTab) {
-      case CustomizeTab.Templates:
-        return <TemplatesTab />
-      case CustomizeTab.Layers:
-        return <LayersTab />
-      case CustomizeTab.Text:
-        return <TextTab />
-      case CustomizeTab.Stickers:
-        return <StickersTab />
-      case CustomizeTab.FontFamily:
-        return <FontFamilies />
-      case CustomizeTab.FontColors:
-        return <FontColors />
-    }
-  })()
 
   const handleSelectFile = () => {
     inputRef.current?.click()
+    setDrawerOpen(false)
   }
 
   const handleFileSelected = (e: ChangeEvent<HTMLInputElement>) => {
@@ -84,26 +71,43 @@ const Sidebar = () => {
     }
   }
 
+  const drawerContent = (function getTabContent() {
+    switch (activeTab) {
+      case CustomizeTab.Templates:
+        return <TemplatesTab />
+      case CustomizeTab.Layers:
+        return <LayersTab />
+      case CustomizeTab.Text:
+        return <TextTab />
+      case CustomizeTab.Stickers:
+        return <StickersTab />
+      case CustomizeTab.FontFamily:
+        return <FontFamilies />
+      case CustomizeTab.FontColors:
+        return <FontColors />
+    }
+  })()
+
   return (
-    <div className="flex">
-      <div className="h-full px-2 py-5 flex flex-col items-center gap-6 border-r">
+    <div className="w-full h-full" ref={container}>
+      <div className="w-auto h-full px-2  border-t flex relative z-100 bg-primary-03">
         {tabs.map((tab) => {
           const handleClick = () => {
-            if (tab.name !== activeTab) {
-              dispatch(customizeActions.setActiveTab(tab.name))
-            }
+            dispatch(customizeActions.setActiveTab(tab.name))
+            setDrawerOpen(true)
           }
+
           return (
             <button
               key={tab.name}
               className={cn(
-                'flex flex-col items-center gap-2 text-disabled hover:text-primary-02/90',
-                tab.name === activeTab && 'text-primary-02'
+                'flex-1 flex flex-col items-center justify-center gap-2 text-disabled hover:text-primary-02/90',
+                tab.name === activeTab && drawerOpen && 'text-primary-02'
               )}
               onClick={handleClick}
             >
-              <SvgIcon className="text-[2rem] leading-none" icon={tab.icon} />
-              <span className="block text-base">{tab.name}</span>
+              <SvgIcon className="text-[1.5rem] leading-none" icon={tab.icon} />
+              <span className="block text-sm">{tab.name}</span>
             </button>
           )
         })}
@@ -125,12 +129,27 @@ const Sidebar = () => {
           onChange={handleFileSelected}
         />
       </div>
-      <div className="w-[21.25rem] border-r">
-        <h1 className="h-[--header-height] flex items-center px-5 border-b text-xl">{activeTab}</h1>
-        <div className="h-[calc(100%-var(--header-height))] overflow-hidden">{tabContent}</div>
-      </div>
+      <Drawer
+        open={drawerOpen}
+        onOpenChange={(open) => {
+          console.log({ open })
+          if (!open) {
+            console.log('close')
+            setDrawerOpen(open)
+          }
+        }}
+        modal={false}
+      >
+        <DrawerContent
+          portalOptions={{
+            container: container.current,
+          }}
+        >
+          <div className="h-[50dvh] pb-14">{drawerContent}</div>
+        </DrawerContent>
+      </Drawer>
     </div>
   )
 }
 
-export default Sidebar
+export default BottomBar

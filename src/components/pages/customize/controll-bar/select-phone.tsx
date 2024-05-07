@@ -13,7 +13,7 @@ const SelectPhone = () => {
           toast.info('Feature coming soon :v')
         }}
       >
-        <SelectTrigger className="w-4/5 min-w-[12rem] max-w-[29rem] h-9">
+        <SelectTrigger className="w-full h-8 xl:w-4/5 xl:min-w-[12rem] xl:max-w-[29rem] xl:h-9">
           <SelectValue placeholder="Theme" />
         </SelectTrigger>
         <SelectContent>
