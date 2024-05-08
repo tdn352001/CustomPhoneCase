@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import Stage from './stage'
 import { HotkeysProvider } from 'react-hotkeys-hook'
 import { useDebounceCallback, useResizeObserver } from 'usehooks-ts'
+import canvasSize from 'canvas-size'
 
 type Size = {
   width?: number
@@ -25,7 +26,6 @@ const Editor = () => {
 
   const isReady = width !== undefined && height !== undefined
 
-  console.log({ width, height })
   return (
     <div
       className="w-full h-full flex items-center justify-center bg-primary-04 relative overflow-hidden"

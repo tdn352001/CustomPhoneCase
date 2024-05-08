@@ -1,12 +1,12 @@
-import { Stage as KonvaStage } from 'react-konva'
-import DefaultLayer from './default-layer'
-import MainLayer from './main-layer'
-import { useStateSize } from '@/components/pages/customize/hooks/use-stage-size'
+import DefaultLayer from '@/components/pages/customize/editor/stage/default-layer'
+import MainLayer from '@/components/pages/customize/editor/stage/main-layer'
+import TextArea from '@/components/pages/customize/editor/stage/text-area'
+import { useKonvaKeyboardEvents } from '@/components/pages/customize/hooks/use-keyboard-event'
 import { useKonvaContext } from '@/components/pages/customize/hooks/use-konva-context'
 import { useStageEvents } from '@/components/pages/customize/hooks/use-stage-events'
-import TextArea from '@/components/pages/customize/editor/stage/text-area'
+import { useStateSize } from '@/components/pages/customize/hooks/use-stage-size'
 import { useEffect } from 'react'
-import { useKonvaKeyboardEvents } from '@/components/pages/customize/hooks/use-keyboard-event'
+import { Stage as KonvaStage, Layer, Rect } from 'react-konva'
 
 type StageProps = {
   containerWidth: number

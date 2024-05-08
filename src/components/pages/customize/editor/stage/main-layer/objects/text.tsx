@@ -21,6 +21,8 @@ const KonvaText = (props: KonvaTextProps) => {
   const timeoutRef = useRef<number>()
 
   const handleStartEditText = () => {
+    window.clearTimeout(timeoutRef.current)
+
     const text = textRef.current
     if (!text) {
       console.error('textRef is null')
@@ -31,17 +33,22 @@ const KonvaText = (props: KonvaTextProps) => {
 
   const handleTextClick = (e: KonvaEventObject<MouseEvent>) => {
     window.clearTimeout(timeoutRef.current)
-    if (e.evt.detail === 1) {
-      const duration = isMetaKey(e) ? 0 : 200
-      timeoutRef.current = window.setTimeout(() => {
-        onClick?.(e)
-      }, duration)
-    } else {
-      handleStartEditText()
-    }
+    const duration = isMetaKey(e) ? 0 : 200
+    timeoutRef.current = window.setTimeout(() => {
+      onClick?.(e)
+    }, duration)
   }
 
-  return <Text ref={textRef} {...rest} onClick={handleTextClick} onTap={handleTextClick} />
+  return (
+    <Text
+      ref={textRef}
+      {...rest}
+      onClick={handleTextClick}
+      onDblClick={handleStartEditText}
+      onTap={handleTextClick}
+      onDblTap={handleStartEditText}
+    />
+  )
 }
 
 export default KonvaText

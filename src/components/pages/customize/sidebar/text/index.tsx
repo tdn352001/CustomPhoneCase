@@ -1,7 +1,11 @@
 import React from 'react'
 import { useKonvaContext } from '@/components/pages/customize/hooks/use-konva-context'
 
-const TextTab = () => {
+interface TextTabProps {
+  onAddText?: () => void
+}
+
+const TextTab = ({ onAddText }: TextTabProps) => {
   const { addText } = useKonvaContext()
   return (
     <div className="flex flex-col gap-3 p-5">
@@ -12,6 +16,7 @@ const TextTab = () => {
             content: 'Heading',
             fontSize: 150,
           })
+          onAddText?.()
         }}
       >
         Add a heading
@@ -23,6 +28,7 @@ const TextTab = () => {
             content: 'Subheading',
             fontSize: 120,
           })
+          onAddText?.()
         }}
       >
         Add a subheading
@@ -34,6 +40,7 @@ const TextTab = () => {
             content: 'body',
             fontSize: 100,
           })
+          onAddText?.()
         }}
       >
         Add a little bit of body text

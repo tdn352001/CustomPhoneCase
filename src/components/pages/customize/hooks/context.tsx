@@ -453,21 +453,25 @@ export const useKonva = (options: UseKonvaOptions = {}) => {
       })
 
       textFonts.forEach(({ nodeId, fontFamily, attrs }) => {
-        loadFont(fontFamily, attrs).then(() => {
-          const stage = stageRef.current
-          console.log({
-            stage,
-            nodeId,
-          })
-          if (stage && nodeId) {
-            const textNode = stage.findOne(`#${nodeId}`) as Konva.Text
-            console.log({ textNode })
-            if (textNode) {
-              textNode.hide()
-              textNode.show()
+        loadFont(fontFamily, attrs)
+          .then(() => {
+            const stage = stageRef.current
+            console.log({
+              stage,
+              nodeId,
+            })
+            if (stage && nodeId) {
+              const textNode = stage.findOne(`#${nodeId}`) as Konva.Text
+              console.log({ textNode })
+              if (textNode) {
+                textNode.hide()
+                textNode.show()
+              }
             }
-          }
-        })
+          })
+          .catch((err) => {
+            console.error(`Load ${fontFamily} error`, err.message)
+          })
       })
     }
   }, [])

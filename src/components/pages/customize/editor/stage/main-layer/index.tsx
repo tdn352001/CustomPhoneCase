@@ -5,7 +5,7 @@ import { useWorkspacePosition } from '@/components/pages/customize/hooks/use-wor
 import { log } from 'console'
 import Konva from 'konva'
 import React from 'react'
-import { Group, Layer, Transformer } from 'react-konva'
+import { Group, Layer, Rect, Transformer } from 'react-konva'
 
 const MainLayer = () => {
   const { transformerRef, selectionBoxRef, interactionBoxRef } = useKonvaContext()
@@ -25,6 +25,7 @@ const MainLayer = () => {
       >
         <KonvaObjects />
       </Group>
+
       <SelectionBox ref={selectionBoxRef} />
       <Transformer
         ref={transformerRef}

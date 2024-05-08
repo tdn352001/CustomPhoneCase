@@ -9,7 +9,7 @@ export const useStateSize = ({
   containerHeight: number
 }) => {
   const stage = store.getState().customize.stage
-  const paddingFactor = 0 // 10% padding
+  const paddingFactor = 0.1 // 10% padding
 
   const { width, height } = stage
 

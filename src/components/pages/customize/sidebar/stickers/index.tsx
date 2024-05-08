@@ -28,7 +28,11 @@ const StickerTabSkeleton = () => {
   )
 }
 
-const StickersTab = () => {
+interface StickersTabProps {
+  onAddSticker?: () => void
+}
+
+const StickersTab = ({ onAddSticker }: StickersTabProps) => {
   const [selectedGroup, setSelectedGroup] = useState<string>()
   const { data: stickerGroupsData, isPending: isGroupPending } = useStickerQuery()
 
@@ -69,6 +73,7 @@ const StickersTab = () => {
 
   const handleClick = (item: StickerItem) => {
     addSticker(item)
+    onAddSticker?.()
   }
 
   return (

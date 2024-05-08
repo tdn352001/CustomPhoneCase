@@ -37,12 +37,19 @@ const LayerItem = (props: LayerItemProps) => {
 
   return (
     <div
-      className="w-full h-[5.25rem] p-2 flex items-center justify-between rounded-xl bg-white shadow-md select-none"
+      className="w-full h-[5.25rem] p-2 flex items-center justify-between rounded-xl bg-white shadow-md select-none touch-none"
       style={style}
       onClick={() => onClick?.(item)}
       ref={setNodeRef}
     >
-      <Button variant="text" size="unset" ref={setActivatorNodeRef} {...attributes} {...listeners}>
+      <Button
+        className="touch-none collapse md:visible"
+        variant="text"
+        size="unset"
+        ref={setActivatorNodeRef}
+        {...attributes}
+        {...listeners}
+      >
         <SvgIcon icon="Drag" size={20} />
       </Button>
       <div className="h-full flex items-center justify-center">

@@ -45,6 +45,7 @@ const CustomizePage = () => {
 const Main = () => {
   const isDesktop = useLargeDevice()
 
+  console.log({ isDesktop })
   if (isDesktop) {
     return (
       <div className="w-full h-full overflow-hidden [--header-height:57px]">

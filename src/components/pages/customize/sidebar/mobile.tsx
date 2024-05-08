@@ -38,6 +38,7 @@ const tabs: { name: CustomizeTab; icon: SVGIcon }[] = [
 const BottomBar = () => {
   const [drawerOpen, setDrawerOpen] = useState(false)
   const inputRef = useRef<HTMLInputElement>(null)
+  const controlbar = useAppSelector(customizeSelector.controlBar)
   const activeTab = useAppSelector(customizeSelector.activeTab)
 
   const container = useRef<HTMLDivElement>(null)
@@ -78,9 +79,9 @@ const BottomBar = () => {
       case CustomizeTab.Layers:
         return <LayersTab />
       case CustomizeTab.Text:
-        return <TextTab />
+        return <TextTab onAddText={() => setDrawerOpen(false)} />
       case CustomizeTab.Stickers:
-        return <StickersTab />
+        return <StickersTab onAddSticker={() => setDrawerOpen(false)} />
       case CustomizeTab.FontFamily:
         return <FontFamilies />
       case CustomizeTab.FontColors:
@@ -129,6 +130,7 @@ const BottomBar = () => {
           onChange={handleFileSelected}
         />
       </div>
+
       <Drawer
         open={drawerOpen}
         onOpenChange={(open) => {
