@@ -9,6 +9,8 @@ import ControlBar from './controll-bar'
 import Editor from './editor'
 import Header from './header'
 import Sidebar from './sidebar'
+import { useEffect } from 'react'
+import { serverLog } from '@/libs/utils/server-log'
 
 const initialItems: KonvaNodeData[] = []
 

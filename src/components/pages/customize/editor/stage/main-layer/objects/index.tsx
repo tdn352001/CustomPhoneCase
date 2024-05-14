@@ -6,20 +6,21 @@ import { useKonvaItems } from '@/components/pages/customize/hooks/use-konva-item
 import { KonvaNodeProps } from '@/libs/types'
 import { KonvaNodeData } from '@/store/slices/customize'
 import { isMetaKey } from '@/libs/utils/konva/is-meta-key'
+import { serverLog } from '@/libs/utils/server-log'
 
 const KonvaObjects = () => {
   const { getItem, updateItem, handleSelectItem, transformerRef } = useKonvaContext()
   const items = useKonvaItems()
 
-  console.log('KonvaObjects')
-
   const handleDragEnd = (e: KonvaEventObject<Event>) => {
+    serverLog('handleDragEnd')
     e.evt.preventDefault()
     e.evt.stopPropagation()
     updateItem(e.target.attrs.id, e.target.attrs)
   }
 
   const handleTransform = (e: KonvaEventObject<Event>) => {
+    serverLog('handleTransform')
     const anchor = transformerRef.current?.getActiveAnchor()
     console.log(anchor)
 
@@ -53,6 +54,7 @@ const KonvaObjects = () => {
   }
 
   const handleTransformEnd = (e: KonvaEventObject<Event>) => {
+    serverLog('handleTransformEnd')
     const attrs = e.target.attrs
 
     updateItem(e.target.id(), {
@@ -68,7 +70,6 @@ const KonvaObjects = () => {
       attrs: {},
       draggable: true,
       onDragEnd: handleDragEnd,
-      onTouchEnd: handleDragEnd,
       onClick: handleSelectItem,
       onTap: handleSelectItem,
       onTransform: handleTransform,

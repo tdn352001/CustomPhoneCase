@@ -2,13 +2,14 @@ import KonvaObjects from '@/components/pages/customize/editor/stage/main-layer/o
 import SelectionBox from '@/components/pages/customize/editor/stage/main-layer/selection-box'
 import { useKonvaContext } from '@/components/pages/customize/hooks/use-konva-context'
 import { useWorkspacePosition } from '@/components/pages/customize/hooks/use-workspace-position'
+import { serverLog } from '@/libs/utils/server-log'
 import { log } from 'console'
 import Konva from 'konva'
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Group, Layer, Rect, Transformer } from 'react-konva'
 
 const MainLayer = () => {
-  const { transformerRef, selectionBoxRef, interactionBoxRef } = useKonvaContext()
+  const { transformerRef, selectionBoxRef } = useKonvaContext()
 
   const { workspace, design } = useWorkspacePosition()
 
@@ -30,10 +31,10 @@ const MainLayer = () => {
       <Transformer
         ref={transformerRef}
         keepRatio
-        anchorSize={16}
+        anchorSize={20}
         anchorStrokeWidth={2}
         anchorCornerRadius={50}
-        borderStrokeWidth={1}
+        borderStrokeWidth={2}
         rotateAnchorOffset={50}
         anchorStyleFunc={(anchor) => {
           const transformer = anchor.getParent() as Konva.Transformer

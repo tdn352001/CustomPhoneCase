@@ -5,6 +5,7 @@ import { useKonvaKeyboardEvents } from '@/components/pages/customize/hooks/use-k
 import { useKonvaContext } from '@/components/pages/customize/hooks/use-konva-context'
 import { useStageEvents } from '@/components/pages/customize/hooks/use-stage-events'
 import { useStateSize } from '@/components/pages/customize/hooks/use-stage-size'
+import { serverLog } from '@/libs/utils/server-log'
 import { useEffect } from 'react'
 import { Stage as KonvaStage, Layer, Rect } from 'react-konva'
 
@@ -18,7 +19,7 @@ const Stage = ({ containerWidth, containerHeight }: StageProps) => {
 
   const konvaContext = useKonvaContext()
 
-  const { stageRef, interactionBoxRef } = konvaContext
+  const { stageRef } = konvaContext
 
   const stageEvents = useStageEvents(konvaContext)
 
@@ -35,10 +36,10 @@ const Stage = ({ containerWidth, containerHeight }: StageProps) => {
     >
       <div className="absolute inset-0 z-50 pointer-events-none select-none overflow-hidden">
         <TextArea />
-        <div
+        {/* <div
           className=" hidden w-40 h-40 absolute top-5 left-5 pointer-events-none bg-red-500"
           ref={interactionBoxRef}
-        />
+        /> */}
       </div>
       <KonvaStage width={width} height={height} ref={stageRef} {...stageEvents}>
         <DefaultLayer />

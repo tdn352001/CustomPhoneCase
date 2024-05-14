@@ -5,6 +5,7 @@ import { KonvaSelectionBoxName } from '@/libs/constants/konva'
 import { FontAttributes, KonvaNodeAttributes, StickerItem, TypeFace } from '@/libs/types'
 import { isKonvaStage, isKonvaText, isKonvaTransformer } from '@/libs/utils/konva/get-node-type'
 import { isMetaKey } from '@/libs/utils/konva/is-meta-key'
+import { serverLog } from '@/libs/utils/server-log'
 import store from '@/store'
 import { ControlBars, CustomizeTab, KonvaNodeData, customizeActions } from '@/store/slices/customize'
 import Konva from 'konva'
@@ -160,6 +161,8 @@ export const useKonva = (options: UseKonvaOptions = {}) => {
   const updateItem = (id: string, attrs: KonvaNodeAttributes) => {
     updateWorkFlow()
     dispatch(customizeActions.updateItem({ id, attrs }))
+    const items = getItems()
+    serverLog(JSON.stringify({ items }, null, 2))
   }
 
   const removeItem = (id: string) => {
@@ -253,6 +256,7 @@ export const useKonva = (options: UseKonvaOptions = {}) => {
   }
 
   const handleSelectItem = (e: KonvaEventObject<Event>) => {
+    serverLog('handleSelectItem')
     const selectedItem = getSelectedItems()
 
     const metaPressed = isMetaKey(e)
