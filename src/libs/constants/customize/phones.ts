@@ -4,8 +4,8 @@ export const phones: PhoneModel[] = [
   {
     id: 52,
     name: 'iPhone 15',
-    width: 948,
-    height: 1831,
+    width: 474,
+    height: 915.5,
     url: 'https://oss.data.ideaskins.com.cn/diy/2024-1-12/c4a54664-a597-4979-bc69-ccfb439026ee.png',
     cameraUrl: '/images/customize/iphone-15/phone-camera.webp',
   },

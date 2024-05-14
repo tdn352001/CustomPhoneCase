@@ -53,8 +53,8 @@ const initialState: CustomizeState = {
   selectedPhone: defaultPhone,
   material: defaultMaterial,
   stage: {
-    width: 2000,
-    height: 2000,
+    width: 1000,
+    height: 1000,
   },
   items: [],
   canUndo: false,

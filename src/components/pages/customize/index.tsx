@@ -1,36 +1,16 @@
 'use client'
 
+import SelectPhone from '@/components/pages/customize/controll-bar/select-phone'
+import { KonvaProvider, useKonva } from '@/components/pages/customize/hooks/context'
+import BottomBar from '@/components/pages/customize/sidebar/mobile'
+import { useLargeDevice } from '@/hooks/device'
 import { KonvaNodeData } from '@/store/slices/customize'
 import ControlBar from './controll-bar'
 import Editor from './editor'
 import Header from './header'
 import Sidebar from './sidebar'
-import { KonvaProvider, useKonva } from '@/components/pages/customize/hooks/context'
-import { fonts } from '@/libs/constants/customize'
-import { useDesktopMediaQuery, useLargeDevice } from '@/hooks/device'
-import { useMediaQuery } from 'usehooks-ts'
-import BottomBar from '@/components/pages/customize/sidebar/mobile'
-import SelectPhone from '@/components/pages/customize/controll-bar/select-phone'
 
-const initialItems: KonvaNodeData[] = [
-  {
-    id: 'QxiYE-HAI311pw98Nqtx9',
-    attrs: {
-      id: 'QxiYE-HAI311pw98Nqtx9',
-      text: 'Text Shadow!',
-      fontFamily: fonts[0].name,
-      fontAttrs: fonts[0].fonts[0],
-      fontSize: 95,
-      x: 300,
-      y: 500,
-      fill: '#da1414',
-      align: 'center',
-      fontStyle: 'italic bold',
-      rotate: 0.3,
-    },
-    className: 'Text',
-  },
-]
+const initialItems: KonvaNodeData[] = []
 
 const CustomizePage = () => {
   const konva = useKonva({ initialItems })
@@ -45,7 +25,6 @@ const CustomizePage = () => {
 const Main = () => {
   const isDesktop = useLargeDevice()
 
-  console.log({ isDesktop })
   if (isDesktop) {
     return (
       <div className="w-full h-full overflow-hidden [--header-height:57px]">
