@@ -24,10 +24,6 @@ const Stage = ({ containerWidth, containerHeight }: StageProps) => {
 
   useKonvaKeyboardEvents(konvaContext)
 
-  useEffect(() => {
-    ;(window as any).stage = stageRef.current
-  }, [])
-
   return (
     <div
       className="absolute top-1/2 left-1/2"
@@ -44,7 +40,7 @@ const Stage = ({ containerWidth, containerHeight }: StageProps) => {
           ref={interactionBoxRef}
         />
       </div>
-      <KonvaStage width={width} height={height} ref={stageRef} sca {...stageEvents}>
+      <KonvaStage width={width} height={height} ref={stageRef} {...stageEvents}>
         <DefaultLayer />
         <MainLayer />
       </KonvaStage>

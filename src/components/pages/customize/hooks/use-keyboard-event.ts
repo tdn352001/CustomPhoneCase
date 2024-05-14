@@ -5,7 +5,6 @@ import { Key } from 'ts-key-enum'
 
 export const useKonvaKeyboardEvents = (props: StageData) => {
   const {
-    stageRef,
     removeSelectedItems,
     selectAllItems,
     goToPast,

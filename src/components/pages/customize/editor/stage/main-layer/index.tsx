@@ -30,11 +30,11 @@ const MainLayer = () => {
       <Transformer
         ref={transformerRef}
         keepRatio
-        anchorSize={32}
-        anchorStrokeWidth={4}
-        anchorCornerRadius={100}
-        borderStrokeWidth={3}
-        rotateAnchorOffset={100}
+        anchorSize={16}
+        anchorStrokeWidth={2}
+        anchorCornerRadius={50}
+        borderStrokeWidth={1}
+        rotateAnchorOffset={50}
         anchorStyleFunc={(anchor) => {
           const transformer = anchor.getParent() as Konva.Transformer
           if (transformer) {
@@ -49,49 +49,49 @@ const MainLayer = () => {
                 anchor.hide()
               }
             } else if (anchor.hasName('top-center') || anchor.hasName('bottom-center')) {
-              anchor.height(20)
-              anchor.offsetY(10)
-              anchor.width(100)
-              anchor.offsetX(50)
+              anchor.height(10)
+              anchor.offsetY(5)
+              anchor.width(50)
+              anchor.offsetX(25)
             } else if (anchor.hasName('middle-left') || anchor.hasName('middle-right')) {
-              anchor.height(100)
-              anchor.offsetY(50)
-              anchor.width(20)
-              anchor.offsetX(10)
+              anchor.height(50)
+              anchor.offsetY(25)
+              anchor.width(10)
+              anchor.offsetX(5)
             }
           }
 
           return anchor
         }}
-        onDragMove={(e) => {
-          // const transformer = transformerRef.current!
-          // const interactionBox = interactionBoxRef.current!
-          // const { x, y } = transformer.getAbsolutePosition()
-          // const { width, height } = transformer.size()
-          // const scaleX = transformer.scaleX()
-          // const scaleY = transformer.scaleY()
-          // const rotation = transformer.rotation()
-          // const position = transformer.position()
-          // const offset = transformer.offset()
-          // const transform = transformer.getAbsoluteTransform()
-          // const matrix = transform.getMatrix()
-          // // console.log({ matrix, x, y })
-          // // console.log(matrix.join(', '))
-          // interactionBox.style.top = `${matrix[5]}px`
-          // interactionBox.style.left = `${matrix[4]}px`
-        }}
-        onTransform={(e) => {
-          // const transformer = transformerRef.current!
-          // const interactionBox = interactionBoxRef.current!
-          // const { x, y } = transformer.getAbsolutePosition()
-          // const {} = transformer.getAbsoluteScale()
-          // let boxX = x
-          // let boxY = y
-          // const rotation = transformer.rotation()
-          // console.log({ rotation, x, y })
-          // interactionBox.style.top = `${boxY}px`
-          // interactionBox.style.left = `${boxX}px`
-        }}
+        // onDragMove={(e) => {
+        // const transformer = transformerRef.current!
+        // const interactionBox = interactionBoxRef.current!
+        // const { x, y } = transformer.getAbsolutePosition()
+        // const { width, height } = transformer.size()
+        // const scaleX = transformer.scaleX()
+        // const scaleY = transformer.scaleY()
+        // const rotation = transformer.rotation()
+        // const position = transformer.position()
+        // const offset = transformer.offset()
+        // const transform = transformer.getAbsoluteTransform()
+        // const matrix = transform.getMatrix()
+        // // console.log({ matrix, x, y })
+        // // console.log(matrix.join(', '))
+        // interactionBox.style.top = `${matrix[5]}px`
+        // interactionBox.style.left = `${matrix[4]}px`
+        // }}
+        // onTransform={(e) => {
+        // const transformer = transformerRef.current!
+        // const interactionBox = interactionBoxRef.current!
+        // const { x, y } = transformer.getAbsolutePosition()
+        // const {} = transformer.getAbsoluteScale()
+        // let boxX = x
+        // let boxY = y
+        // const rotation = transformer.rotation()
+        // console.log({ rotation, x, y })
+        // interactionBox.style.top = `${boxY}px`
+        // interactionBox.style.left = `${boxX}px`
+        // }}
       />
     </Layer>
   )

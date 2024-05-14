@@ -120,10 +120,11 @@ export const useStageEvents = ({
 
   return {
     onClick: handleClick,
+    onTap: handleClick,
     // onMouseDown: handleMouseDown,
     // onMouseMove: handleMouseMove,
     // onMouseUp: handleMouseUp,
-    // onTap: handleClick,
+
     // onTouchStart: handleMouseDown,
     // onTouchMove: handleMouseMove,
     // onTouchEnd: handleMouseUp,
