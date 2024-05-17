@@ -3,8 +3,31 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { phones } from '@/libs/constants/customize'
 import { Button } from '@/components/ui/button'
 import { toast } from 'sonner'
+import { useAppSelector } from '@/hooks/redux'
+import { authSelectors } from '@/store/slices/auth'
+import { useKonvaContext } from '@/components/pages/customize/hooks/use-konva-context'
+import { getWorkspacePosition } from '@/components/pages/customize/hooks/use-workspace-position'
 
 const SelectPhone = () => {
+  const user = useAppSelector(authSelectors.user)
+  const { captureWorkspace } = useKonvaContext()
+
+  const handleSaveImage = () => {
+    const url = captureWorkspace()
+    if (url) {
+      downloadURI(url, 'image.png')
+    }
+  }
+
+  function downloadURI(uri: string, name: string) {
+    var link = document.createElement('a')
+    link.download = name
+    link.href = uri
+    document.body.appendChild(link)
+    link.click()
+    document.body.removeChild(link)
+  }
+
   return (
     <div className="w-full flex items-center justify-end gap-5">
       <Select
@@ -24,8 +47,8 @@ const SelectPhone = () => {
           ))}
         </SelectContent>
       </Select>
-      <Button className="rounded-[2.5rem] text-base w-[4.5rem]" size="sm">
-        Print
+      <Button className="rounded-[2.5rem] text-base w-[4.5rem]" size="sm" onClick={handleSaveImage}>
+        {user ? 'Save' : 'Print'}
       </Button>
     </div>
   )

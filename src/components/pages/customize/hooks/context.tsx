@@ -440,6 +440,41 @@ export const useKonva = (options: UseKonvaOptions = {}) => {
     }
   }
 
+  const getWorkspaceNode = () => {
+    const stage = stageRef.current
+    if (!stage) {
+      return
+    }
+
+    const layers = stage.getChildren()
+    if (!layers) {
+      return
+    }
+    const mainLayers = layers[1]
+    if (!mainLayers) {
+      return
+    }
+    const group = mainLayers.getChildren()[0] as Konva.Group
+    return group
+  }
+
+  const captureWorkspace = () => {
+    const workspaceNode = getWorkspaceNode()
+    if (!workspaceNode) {
+      return
+    }
+
+    // const clipFunc = workspaceNode.clipFunc()
+    const { workspace: position } = getWorkspacePosition()
+    // ;(workspaceNode as any).clipFunc(undefined)
+    const url = workspaceNode.toDataURL({
+      ...position,
+      pixelRatio: 2,
+    })
+    // workspaceNode.clipFunc(clipFunc)
+    return url
+  }
+
   useEffect(() => {
     const initialItems = options.initialItems
 
@@ -511,6 +546,7 @@ export const useKonva = (options: UseKonvaOptions = {}) => {
     moveToRight,
     moveToTop,
     moveToBottom,
+    captureWorkspace,
   }
 }
 

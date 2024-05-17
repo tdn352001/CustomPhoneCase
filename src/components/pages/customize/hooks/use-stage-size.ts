@@ -16,7 +16,7 @@ export const useStateSize = ({
   const scale = useMemo(() => {
     const scaleX = (containerWidth * (1 - paddingFactor)) / width
     const scaleY = (containerHeight * (1 - paddingFactor)) / height
-    return Math.min(scaleX, scaleY)
+    return Math.min(Math.min(scaleX, scaleY), 1)
   }, [containerHeight, containerWidth, height, width])
 
   return {

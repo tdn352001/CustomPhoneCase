@@ -9,7 +9,7 @@ type KonvaImageProps = KonvaNodeProps
 const KonvaImage = (props: KonvaImageProps) => {
   const { ...attrs } = props
 
-  const [image] = useImage(attrs.src)
+  const [image] = useImage(attrs.src, 'anonymous')
 
   const imageRef = useRef<Konva.Image>(null)
 

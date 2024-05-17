@@ -6,7 +6,7 @@ import { customizeSelector } from '@/store/slices/customize'
 
 const Material = () => {
   const { width, height, url } = useAppSelector(customizeSelector.material)
-  const [image] = useImage(url)
+  const [image] = useImage(url, 'anonymous')
 
   return <KonvaImage image={image} width={width} height={height} x={0} y={0} />
 }
