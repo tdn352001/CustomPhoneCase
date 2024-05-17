@@ -85,22 +85,23 @@ export const useKonva = (options: UseKonvaOptions = {}) => {
   }
 
   const addSticker = (item: StickerItem) => {
-    const defaultSize = 300
+    // const defaultSize = 300
 
-    const {
-      design: { x, y, width, height },
-    } = getWorkspacePosition()
+    // const {
+    //   design: { x, y, width, height },
+    // } = getWorkspacePosition()
 
-    return addItem({
-      className: 'Image',
-      attrs: {
-        x: x + width / 2 - defaultSize / 2,
-        y: y + height / 2 - defaultSize / 2,
-        width: defaultSize,
-        height: defaultSize,
-        src: item.url,
-      },
-    })
+    // return addItem({
+    //   className: 'Image',
+    //   attrs: {
+    //     x: x + width / 2 - defaultSize / 2,
+    //     y: y + height / 2 - defaultSize / 2,
+    //     width: defaultSize,
+    //     height: defaultSize,
+    //     src: item.url,
+    //   },
+    // })
+    addImage(item.url)
   }
 
   const addImage = (src: string) => {
