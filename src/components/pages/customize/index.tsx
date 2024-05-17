@@ -11,6 +11,12 @@ import Header from './header'
 import Sidebar from './sidebar'
 import { useEffect } from 'react'
 import { serverLog } from '@/libs/utils/server-log'
+import { useAppDispatch } from '@/hooks/redux'
+import { routers } from '@/libs/constants/routers'
+import { authService } from '@/services/auth-service'
+import { authActions } from '@/store/slices/auth'
+import { useRouter } from 'next/navigation'
+import store from '@/store'
 
 const initialItems: KonvaNodeData[] = []
 
@@ -26,6 +32,21 @@ const CustomizePage = () => {
 
 const Main = () => {
   const isDesktop = useLargeDevice()
+
+  const dispatch = useAppDispatch()
+
+  useEffect(() => {
+    const getCurrentUser = async () => {
+      return authService.getCurrentUser().then((res) => {
+        const user = res.data
+        dispatch(authActions.setUser(user))
+      })
+    }
+    const user = store.getState().auth.user
+    if (!user) {
+      getCurrentUser()
+    }
+  }, [dispatch])
 
   if (isDesktop) {
     return (
