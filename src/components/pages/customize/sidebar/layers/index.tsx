@@ -103,42 +103,44 @@ const LayersTab = () => {
   }, [])
 
   return (
-    <ScrollArea className="h-full p-2">
-      <div className="flex flex-col-reverse gap-3 p-1">
-        <div className="w-full h-[5.25rem] p-2 flex items-center justify-center rounded-xl bg-white shadow-md ring-2 ring-black/5 select-none">
-          <div className="max-w-[7.5rem]  h-full relative">
-            <img className="w-full h-full object-contain" src={selectedPhoneUrl} alt="Image" />
-            <img className="absolute top-0 w-full h-full object-contain" src={materialUrl} alt="Image" />
+    <div className="h-full">
+      <ScrollArea className="h-full p-2">
+        <div className="flex flex-col-reverse gap-3 p-1">
+          <div className="w-full h-[5.25rem] p-2 flex items-center justify-center rounded-xl bg-white shadow-md ring-2 ring-black/5 select-none">
+            <div className="max-w-[7.5rem]  h-full relative">
+              <img className="w-full h-full object-contain" src={selectedPhoneUrl} alt="Image" />
+              <img className="absolute top-0 w-full h-full object-contain" src={materialUrl} alt="Image" />
+            </div>
           </div>
-        </div>
 
-        <DndContext
-          sensors={sensors}
-          collisionDetection={closestCenter}
-          onDragStart={handleDragStart}
-          onDragEnd={handleDragEnd}
-          onDragCancel={handleDragCancel}
-        >
-          <SortableContext items={items} strategy={verticalListSortingStrategy}>
-            {items.map((item) => {
-              return (
-                <LayerItem
-                  key={item.id}
-                  item={item}
-                  onClick={handleSelectItem}
-                  onRemove={handleRemoveItem}
-                  onBringForward={handleBringForward}
-                  onSendBackward={handleSendBackward}
-                />
-              )
-            })}
-          </SortableContext>
-          <DragOverlay dropAnimation={dropAnimationConfig}>
-            {activeItem ? <LayerItem item={activeItem} /> : null}
-          </DragOverlay>
-        </DndContext>
-      </div>
-    </ScrollArea>
+          <DndContext
+            sensors={sensors}
+            collisionDetection={closestCenter}
+            onDragStart={handleDragStart}
+            onDragEnd={handleDragEnd}
+            onDragCancel={handleDragCancel}
+          >
+            <SortableContext items={items} strategy={verticalListSortingStrategy}>
+              {items.map((item) => {
+                return (
+                  <LayerItem
+                    key={item.id}
+                    item={item}
+                    onClick={handleSelectItem}
+                    onRemove={handleRemoveItem}
+                    onBringForward={handleBringForward}
+                    onSendBackward={handleSendBackward}
+                  />
+                )
+              })}
+            </SortableContext>
+            <DragOverlay dropAnimation={dropAnimationConfig}>
+              {activeItem ? <LayerItem item={activeItem} /> : null}
+            </DragOverlay>
+          </DndContext>
+        </div>
+      </ScrollArea>
+    </div>
   )
 }
 

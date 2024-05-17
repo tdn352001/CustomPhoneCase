@@ -15,6 +15,8 @@ import FontFamilies from './font-families'
 import TemplatesTab from './templates'
 import TextTab from './text'
 import { Drawer, DrawerContent } from '@/components/ui/drawer'
+import { AnimatePresence, motion } from 'framer-motion'
+import { useOnClickOutside } from 'usehooks-ts'
 
 const tabs: { name: CustomizeTab; icon: SVGIcon }[] = [
   {
@@ -42,6 +44,7 @@ const BottomBar = () => {
   const activeTab = useAppSelector(customizeSelector.activeTab)
 
   const container = useRef<HTMLDivElement>(null)
+  const drawer = useRef<HTMLDivElement>(null)
 
   const { addImage } = useKonvaContext()
   const { mutateAsync: uploadFile, isPending } = useUploadFileMutation()
@@ -89,13 +92,22 @@ const BottomBar = () => {
     }
   })()
 
+  useOnClickOutside(container, () => {
+    setDrawerOpen(false)
+  })
+
   return (
-    <div className="w-full h-full select-none" ref={container}>
+    <div className="w-full h-full select-none relative" ref={container}>
       <div className="w-auto h-full px-2  border-t flex relative z-100 bg-primary-03">
         {tabs.map((tab) => {
           const handleClick = () => {
-            dispatch(customizeActions.setActiveTab(tab.name))
-            setDrawerOpen(true)
+            console.log({ activeTab, tab: tab.name, drawerOpen })
+            if (activeTab === tab.name && drawerOpen) {
+              setDrawerOpen(false)
+            } else {
+              dispatch(customizeActions.setActiveTab(tab.name))
+              setDrawerOpen(true)
+            }
           }
 
           return (
@@ -114,7 +126,7 @@ const BottomBar = () => {
         })}
         <button
           key="Upload"
-          className="flex flex-col items-center gap-2 text-disabled"
+          className="flex-1 flex flex-col items-center gap-2 text-disabled"
           onClick={handleSelectFile}
           disabled={isPending}
         >
@@ -131,7 +143,32 @@ const BottomBar = () => {
         />
       </div>
 
-      <Drawer
+      <AnimatePresence>
+        {drawerOpen && (
+          <motion.div
+            className="absolute w-full flex h-auto flex-col bg-background"
+            initial={{
+              y: '0%',
+              opacity: 0,
+            }}
+            animate={{
+              y: '-100%',
+              opacity: 1,
+            }}
+            exit={{
+              y: '0%',
+              opacity: 0,
+            }}
+            transition={{
+              bounce: 1,
+            }}
+          >
+            <div className="h-[50dvh] py-4 pt-4 pb-14 select-none rounded-t-[10px] border ">{drawerContent}</div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* <Drawer
         open={drawerOpen}
         onOpenChange={(open) => {
           console.log({ open })
@@ -141,11 +178,13 @@ const BottomBar = () => {
           }
         }}
         modal={false}
+        // handleOnly={true}
+        // shouldScaleBackground={false}
       >
         <DrawerContent>
           <div className="h-[50dvh] pb-14 select-none">{drawerContent}</div>
         </DrawerContent>
-      </Drawer>
+      </Drawer> */}
     </div>
   )
 }
