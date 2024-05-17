@@ -6,7 +6,7 @@ import { useUploadFileMutation } from '@/hooks/queries/assets'
 import { useAppDispatch, useAppSelector } from '@/hooks/redux'
 import { getServerFile } from '@/libs/utils/get-server-file'
 import { cn } from '@/libs/utils/tw-merge'
-import { CustomizeTab, customizeActions, customizeSelector } from '@/store/slices/customize'
+import { ControlBars, CustomizeTab, customizeActions, customizeSelector } from '@/store/slices/customize'
 import React, { ChangeEvent, useRef, useState } from 'react'
 import FontColors from './font-colors'
 import LayersTab from './layers'
@@ -17,6 +17,8 @@ import TextTab from './text'
 import { Drawer, DrawerContent } from '@/components/ui/drawer'
 import { AnimatePresence, motion } from 'framer-motion'
 import { useOnClickOutside } from 'usehooks-ts'
+import TextStyle from '@/components/pages/customize/controll-bar/text-style'
+import { Custom } from 'webfontloader'
 
 const tabs: { name: CustomizeTab; icon: SVGIcon }[] = [
   {
@@ -75,6 +77,15 @@ const BottomBar = () => {
     }
   }
 
+  const handleTabChange = (tabName: CustomizeTab) => {
+    if (activeTab === tabName && drawerOpen) {
+      setDrawerOpen(false)
+    } else {
+      dispatch(customizeActions.setActiveTab(tabName))
+      setDrawerOpen(true)
+    }
+  }
+
   const drawerContent = (function getTabContent() {
     switch (activeTab) {
       case CustomizeTab.Templates:
@@ -88,7 +99,7 @@ const BottomBar = () => {
       case CustomizeTab.FontFamily:
         return <FontFamilies />
       case CustomizeTab.FontColors:
-        return <FontColors />
+        return <FontColors className="overflow-y-auto px-8" />
     }
   })()
 
@@ -98,50 +109,47 @@ const BottomBar = () => {
 
   return (
     <div className="w-full h-full select-none relative" ref={container}>
-      <div className="w-auto h-full px-2  border-t flex relative z-100 bg-primary-03">
-        {tabs.map((tab) => {
-          const handleClick = () => {
-            console.log({ activeTab, tab: tab.name, drawerOpen })
-            if (activeTab === tab.name && drawerOpen) {
-              setDrawerOpen(false)
-            } else {
-              dispatch(customizeActions.setActiveTab(tab.name))
-              setDrawerOpen(true)
-            }
-          }
-
-          return (
-            <button
-              key={tab.name}
-              className={cn(
-                'flex-1 flex flex-col items-center justify-center gap-2 text-disabled hover:text-primary-02/90',
-                tab.name === activeTab && drawerOpen && 'text-primary-02'
-              )}
-              onClick={handleClick}
-            >
-              <SvgIcon className="text-[1.5rem] leading-none" icon={tab.icon} />
-              <span className="block text-sm">{tab.name}</span>
-            </button>
-          )
-        })}
-        <button
-          key="Upload"
-          className="flex-1 flex flex-col items-center gap-2 text-disabled"
-          onClick={handleSelectFile}
-          disabled={isPending}
-        >
-          <SvgIcon className="text-[2rem] leading-none" icon="UploadAlt" />
-          <span className="block text-base">Upload</span>
-        </button>
-        <input
-          className="hidden"
-          ref={inputRef}
-          type="file"
-          name="file"
-          accept="image/png, image/jpeg, imgage/jpg, image/svg"
-          onChange={handleFileSelected}
-        />
-      </div>
+      {controlbar === ControlBars.Text && (
+        <div className="w-auto h-full overflow-x-auto overflow-y-hidden px-2 border-t flex items-center  relative z-100 bg-primary-03">
+          <TextStyle className="w-auto" onTabSelectedChange={handleTabChange} />
+        </div>
+      )}
+      {controlbar === ControlBars.Default && (
+        <div className="w-auto h-full px-2 border-t flex relative z-100 bg-primary-03">
+          {tabs.map((tab) => {
+            return (
+              <button
+                key={tab.name}
+                className={cn(
+                  'flex-1 flex flex-col items-center justify-center gap-2 text-disabled hover:text-primary-02/90',
+                  tab.name === activeTab && drawerOpen && 'text-primary-02'
+                )}
+                onClick={() => handleTabChange(tab.name)}
+              >
+                <SvgIcon className="text-[1.5rem] leading-none" icon={tab.icon} />
+                <span className="block text-sm">{tab.name}</span>
+              </button>
+            )
+          })}
+          <button
+            key="Upload"
+            className="flex-1 flex flex-col items-center gap-2 text-disabled"
+            onClick={handleSelectFile}
+            disabled={isPending}
+          >
+            <SvgIcon className="text-[2rem] leading-none" icon="UploadAlt" />
+            <span className="block text-base">Upload</span>
+          </button>
+          <input
+            className="hidden"
+            ref={inputRef}
+            type="file"
+            name="file"
+            accept="image/png, image/jpeg, imgage/jpg, image/svg"
+            onChange={handleFileSelected}
+          />
+        </div>
+      )}
 
       <AnimatePresence>
         {drawerOpen && (
@@ -163,7 +171,7 @@ const BottomBar = () => {
               bounce: 1,
             }}
           >
-            <div className="h-[50dvh] py-4 pt-4 pb-14 select-none rounded-t-[10px] border ">{drawerContent}</div>
+            <div className="h-[52dvh] py-4 pt-4 pb-14 select-none rounded-t-[10px] border ">{drawerContent}</div>
           </motion.div>
         )}
       </AnimatePresence>

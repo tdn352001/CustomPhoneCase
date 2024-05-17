@@ -18,7 +18,12 @@ const MIN_FONT_SIZE = 20
 const MAX_FONT_SIZE = 9999
 const REGEXP_ONLY_DIGITS = '^\\d+$'
 
-const TextStyle = () => {
+interface TextStyleProps {
+  className?: string
+  onTabSelectedChange?: (tabName: CustomizeTab) => void
+}
+
+const TextStyle = ({ className, onTabSelectedChange }: TextStyleProps) => {
   const [_, setForceUpdate] = React.useState(0)
 
   const { getSelectedItems, updateItem } = useKonvaContext()
@@ -102,7 +107,7 @@ const TextStyle = () => {
   }, [updateInputWidth, textNode])
 
   return (
-    <div className="w-full flex items-center justify-end gap-5">
+    <div className={cn('w-full flex items-center justify-end gap-5', className)}>
       <Group>
         <button
           className={cn(
@@ -112,6 +117,7 @@ const TextStyle = () => {
           disabled={isSelectingFont}
           onClick={() => {
             dispatch(customizeActions.setActiveTab(CustomizeTab.FontFamily))
+            onTabSelectedChange?.(CustomizeTab.FontFamily)
           }}
         >
           <span className="block whitespace-nowrap"> {textNode.fontFamily()}</span>
@@ -155,6 +161,7 @@ const TextStyle = () => {
           onPressedChange={(pressed) => {
             if (pressed) {
               dispatch(customizeActions.setActiveTab(CustomizeTab.FontColors))
+              onTabSelectedChange?.(CustomizeTab.FontColors)
             }
           }}
         >

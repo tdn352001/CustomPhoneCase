@@ -8,8 +8,9 @@ import Konva from 'konva'
 import { useAppSelector } from '@/hooks/redux'
 import { customizeSelector } from '@/store/slices/customize'
 import { useDebounceCallback } from 'usehooks-ts'
+import { cn } from '@/libs/utils/tw-merge'
 
-const FontColors = () => {
+const FontColors = ({ className }: { className?: string }) => {
   const { updateItem, getSelectedItems, loadTypeface } = useKonvaContext()
   const selectedItems = getSelectedItems()
   const textNode = selectedItems[0] as Konva.Text
@@ -28,7 +29,7 @@ const FontColors = () => {
   }
 
   return (
-    <div className="h-full p-4">
+    <div className={cn('h-full p-4', className)}>
       <div className="color-picker">
         <HexColorPicker color={color} onChange={handleColorChange} />
         <div className="w-full h-10 mt-3 flex items-center justify-center gap-0.5 rounded-sm border focus-within:border-primary-02">
